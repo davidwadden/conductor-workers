@@ -3,6 +3,7 @@ import org.springframework.boot.gradle.plugin.SpringBootPlugin
 plugins {
     id 'org.springframework.boot' version '2.1.5.RELEASE' apply false
     id 'java'
+    id 'java-library'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -16,6 +17,7 @@ repositories {
 }
 
 dependencies {
+    api('com.netflix.conductor:conductor-client')
     testImplementation('org.junit.jupiter:junit-jupiter-api')
     testImplementation('org.assertj:assertj-core')
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
@@ -24,6 +26,9 @@ dependencies {
 dependencyManagement {
     imports {
         mavenBom(SpringBootPlugin.BOM_COORDINATES)
+    }
+    dependencies {
+        dependency("com.netflix.conductor:conductor-client:${conductorClientVersion}")
     }
 }
 
