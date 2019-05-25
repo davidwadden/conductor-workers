@@ -1,0 +1,33 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id 'org.springframework.boot' version '2.1.5.RELEASE' apply false
+}
+
+subprojects { subproject ->
+
+    subproject.apply plugin: 'io.spring.dependency-management'
+    subproject.apply plugin: 'java'
+
+    group = 'io.pivotal.conductor.worker'
+    version = '0.1.0-SNAPSHOT'
+    sourceCompatibility = '1.8'
+
+    repositories { jcenter() }
+
+    dependencies {
+        testImplementation('org.junit.jupiter:junit-jupiter-api')
+        testImplementation('org.assertj:assertj-core')
+        testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
+    }
+
+    dependencyManagement {
+        imports { mavenBom(SpringBootPlugin.BOM_COORDINATES) }
+
+        dependencies {
+            dependency("com.netflix.conductor:conductor-client:${conductorClientVersion}")
+        }
+    }
+
+    test { useJUnitPlatform() }
+}
