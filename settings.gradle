@@ -4,3 +4,5 @@ pluginManagement {
     }
 }
 rootProject.name = 'conductor-workers'
+
+include('workers-app')
