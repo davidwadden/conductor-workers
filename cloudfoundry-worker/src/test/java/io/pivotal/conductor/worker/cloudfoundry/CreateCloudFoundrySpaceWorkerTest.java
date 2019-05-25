@@ -22,7 +22,7 @@ class CreateCloudFoundrySpaceWorkerTest {
     void execute() {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = new HashMap<String, Object>() {{
+        Map<String, Object> inputData = new HashMap<>() {{
             put("projectName", "Some Project Name!");
             put("spaceNameSuffix", "some-suffix");
         }};
