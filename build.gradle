@@ -10,10 +10,20 @@ version = '0.1.0-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'junit', module: 'junit' 
+    }
+    testImplementation('org.junit.jupiter:junit-jupiter-api')
+    testImplementation('org.assertj:assertj-core')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
+}
+
+test {
+    useJUnitPlatform()
 }
