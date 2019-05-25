@@ -5,4 +5,5 @@ pluginManagement {
 }
 rootProject.name = 'conductor-workers'
 
+include('cloudfoundry-worker')
 include('workers-app')
