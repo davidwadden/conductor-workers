@@ -9,4 +9,6 @@ dependencies {
     implementation('org.cloudfoundry:cloudfoundry-operations')
     implementation('io.projectreactor:reactor-core')
     implementation('io.projectreactor.ipc:reactor-netty')
+
+    testImplementation('ch.qos.logback:logback-classic')
 }
