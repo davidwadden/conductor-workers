@@ -1,0 +1,19 @@
+[
+  {
+    "name": "delete_cloud_foundry_space",
+    "retryCount": 2,
+    "timeoutSeconds": 600,
+    "inputKeys": [
+      "projectName",
+      "spaceNameSuffix",
+      "dryRun"
+    ],
+    "outputKeys": [
+      "wasDeleted"
+    ],
+    "timeoutPolicy": "TIME_OUT_WF",
+    "retryLogic": "FIXED",
+    "retryDelaySeconds": 5,
+    "responseTimeoutSeconds": 60
+  }
+]

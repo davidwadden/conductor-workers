@@ -26,4 +26,9 @@ public class CloudFoundryWorkerConfig {
         return new CreateRabbitMqServiceWorker();
     }
 
+    @Bean
+    public DeleteCloudFoundrySpaceWorker deleteCloudFoundrySpaceWorker() {
+        return new DeleteCloudFoundrySpaceWorker();
+    }
+
 }
