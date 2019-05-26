@@ -1,0 +1,32 @@
+{
+  "account_id": 90,
+  "atom_enabled": false,
+  "automatic_planning": true,
+  "bugs_and_chores_are_estimatable": false,
+  "created_at": "2018-10-02T12:00:05Z",
+  "current_iteration_number": 1,
+  "enable_following": true,
+  "enable_incoming_emails": true,
+  "enable_tasks": true,
+  "has_google_domain": false,
+  "id": 678,
+  "initial_velocity": 10,
+  "iteration_length": 1,
+  "kind": "project",
+  "name": "Some Project Name",
+  "number_of_done_iterations_to_show": 12,
+  "point_scale": "0,1,2,3",
+  "point_scale_is_custom": false,
+  "project_type": "private",
+  "public": false,
+  "start_time": "2018-10-02T12:00:00Z",
+  "time_zone": {
+    "kind": "time_zone",
+    "olson_name": "America/Los_Angeles",
+    "offset": "-07:00"
+  },
+  "updated_at": "2018-10-02T12:00:05Z",
+  "velocity_averaged_over": 3,
+  "version": 1,
+  "week_start_day": "Monday"
+}

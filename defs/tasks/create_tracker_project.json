@@ -1,0 +1,19 @@
+[
+  {
+    "name": "create_tracker_project",
+    "retryCount": 2,
+    "timeoutSeconds": 600,
+    "inputKeys": [
+      "projectName",
+      "stories",
+      "dryRun"
+    ],
+    "outputKeys": [
+      "projectUrl"
+    ],
+    "timeoutPolicy": "TIME_OUT_WF",
+    "retryLogic": "FIXED",
+    "retryDelaySeconds": 5,
+    "responseTimeoutSeconds": 60
+  }
+]
