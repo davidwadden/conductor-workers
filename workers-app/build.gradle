@@ -6,6 +6,7 @@ dependencies {
     implementation(project(':cloudfoundry-worker'))
     implementation(project(':github-worker'))
     implementation(project(':jira-worker'))
+    implementation(project(':tracker-worker'))
     implementation('org.springframework.boot:spring-boot-starter-web')
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {

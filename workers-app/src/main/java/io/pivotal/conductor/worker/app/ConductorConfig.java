@@ -7,12 +7,15 @@ import com.netflix.conductor.client.worker.Worker;
 import io.pivotal.conductor.worker.app.ConductorConfig.ImportCloudFoundryWorkerConfig.PropertyBindingCloudFoundryProperties;
 import io.pivotal.conductor.worker.app.ConductorConfig.ImportGitHubWorkerConfig.PropertyBindingGitHubProperties;
 import io.pivotal.conductor.worker.app.ConductorConfig.ImportJiraWorkerConfig.PropertyBindingJiraProperties;
+import io.pivotal.conductor.worker.app.ConductorConfig.ImportTrackerWorkerConfig.PropertyBindingTrackerProperties;
 import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryProperties;
 import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryWorkerConfig;
-import io.pivotal.conductor.worker.github.GitHubWorkerConfig;
 import io.pivotal.conductor.worker.github.GitHubProperties;
+import io.pivotal.conductor.worker.github.GitHubWorkerConfig;
 import io.pivotal.conductor.worker.jira.JiraProperties;
 import io.pivotal.conductor.worker.jira.JiraWorkerConfig;
+import io.pivotal.conductor.worker.tracker.TrackerProperties;
+import io.pivotal.conductor.worker.tracker.TrackerWorkerConfig;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -53,6 +56,15 @@ public class ConductorConfig {
 
         @ConfigurationProperties("portal.jira")
         static class PropertyBindingJiraProperties extends JiraProperties {}
+    }
+
+    @EnableConfigurationProperties(PropertyBindingTrackerProperties.class)
+    @Import(TrackerWorkerConfig.class)
+    @Configuration
+    static class ImportTrackerWorkerConfig {
+
+        @ConfigurationProperties("portal.tracker")
+        static class PropertyBindingTrackerProperties extends TrackerProperties {}
     }
 
     @Bean

@@ -23,3 +23,6 @@ portal:
     password: some-password
     api-url: some-api-url
     account-id: some-account-id
+  tracker:
+    api-key: some-tracker-api-key
+    account-id: -1
