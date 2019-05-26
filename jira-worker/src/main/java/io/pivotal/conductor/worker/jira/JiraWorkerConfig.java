@@ -19,4 +19,9 @@ public class JiraWorkerConfig {
         return new CreateJiraProjectWorker(properties, jiraRestOperations, projectKeyGenerator);
     }
 
+    @Bean
+    public DeleteJiraProjectWorker deleteJiraProjectWorker(RestOperations jiraRestOperations) {
+        return new DeleteJiraProjectWorker(properties, jiraRestOperations);
+    }
+
 }
