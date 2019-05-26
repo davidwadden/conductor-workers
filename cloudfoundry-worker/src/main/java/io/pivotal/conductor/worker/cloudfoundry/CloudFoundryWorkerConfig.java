@@ -30,8 +30,9 @@ public class CloudFoundryWorkerConfig {
     }
 
     @Bean
-    public DeleteCloudFoundrySpaceWorker deleteCloudFoundrySpaceWorker() {
-        return new DeleteCloudFoundrySpaceWorker();
+    public DeleteCloudFoundrySpaceWorker deleteCloudFoundrySpaceWorker(
+        CloudFoundrySpaceClient cloudFoundrySpaceClient) {
+        return new DeleteCloudFoundrySpaceWorker(cloudFoundrySpaceClient);
     }
 
 }
