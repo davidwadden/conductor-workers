@@ -6,6 +6,10 @@ server:
 portal:
   conductor:
     conductor-root-uri: http://localhost:8080/api/
+  bitbucket:
+    username: some-bitbucket-username
+    password: some-bitbucket-password
+    team-name: some-bitbucket-team-name
   cloudfoundry:
     api-host: api.run.pivotal.io
     apps-manager-host: console.run.pivotal.io

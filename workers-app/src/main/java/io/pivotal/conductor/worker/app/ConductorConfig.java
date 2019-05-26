@@ -5,11 +5,14 @@ import com.netflix.conductor.client.task.WorkflowTaskCoordinator;
 import com.netflix.conductor.client.task.WorkflowTaskCoordinator.Builder;
 import com.netflix.conductor.client.worker.Worker;
 import io.pivotal.conductor.worker.app.ConductorConfig.ImportCloudFoundryWorkerConfig.PropertyBindingCloudFoundryProperties;
+import io.pivotal.conductor.worker.app.ConductorConfig.ImportBitbucketWorkerConfig.PropertyBindingBitbucketProperties;
 import io.pivotal.conductor.worker.app.ConductorConfig.ImportGitHubWorkerConfig.PropertyBindingGitHubProperties;
 import io.pivotal.conductor.worker.app.ConductorConfig.ImportJiraWorkerConfig.PropertyBindingJiraProperties;
 import io.pivotal.conductor.worker.app.ConductorConfig.ImportTrackerWorkerConfig.PropertyBindingTrackerProperties;
 import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryProperties;
 import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryWorkerConfig;
+import io.pivotal.conductor.worker.bitbucket.BitbucketProperties;
+import io.pivotal.conductor.worker.bitbucket.BitbucketWorkerConfig;
 import io.pivotal.conductor.worker.github.GitHubProperties;
 import io.pivotal.conductor.worker.github.GitHubWorkerConfig;
 import io.pivotal.conductor.worker.jira.JiraProperties;
@@ -30,6 +33,15 @@ public class ConductorConfig {
 
     @Autowired
     private ConductorProperties properties;
+
+    @EnableConfigurationProperties(PropertyBindingBitbucketProperties.class)
+    @Import(BitbucketWorkerConfig.class)
+    @Configuration
+    static class ImportBitbucketWorkerConfig {
+
+        @ConfigurationProperties("portal.bitbucket")
+        static class PropertyBindingBitbucketProperties extends BitbucketProperties {}
+    }
 
     @EnableConfigurationProperties(PropertyBindingCloudFoundryProperties.class)
     @Import(CloudFoundryWorkerConfig.class)

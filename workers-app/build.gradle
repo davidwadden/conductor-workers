@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(':bitbucket-worker'))
     implementation(project(':cloudfoundry-worker'))
     implementation(project(':github-worker'))
     implementation(project(':jira-worker'))
