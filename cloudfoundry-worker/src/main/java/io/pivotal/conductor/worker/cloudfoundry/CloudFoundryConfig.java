@@ -29,6 +29,12 @@ public class CloudFoundryConfig {
     }
 
     @Bean
+    public CloudFoundryRouteClient cloudFoundryRouteClient() {
+        return new CloudFoundryRouteClient(properties, cloudFoundryOperations(),
+            cloudFoundryClient());
+    }
+
+    @Bean
     public ConnectionContext connectionContext() {
         return DefaultConnectionContext.builder()
             .apiHost(properties.getApiHost())
