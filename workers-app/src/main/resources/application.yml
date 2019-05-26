@@ -2,3 +2,15 @@
 
 server:
   port: 8070
+
+portal:
+  conductor:
+    conductor-root-uri: http://localhost:8080/api/
+  cloudfoundry:
+    api-host: api.run.pivotal.io
+    apps-manager-host: console.run.pivotal.io
+    organization: some-cloudfoundry-organization
+    username: some-cloudfoundry-username
+    password: some-cloudfoundry-password
+    log-drain-url: some-cloudfoundry-log-drain-url
+    domain: some-cloudfoundry-domain
