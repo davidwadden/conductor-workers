@@ -9,8 +9,9 @@ import org.springframework.context.annotation.Import;
 public class CloudFoundryWorkerConfig {
 
     @Bean
-    public CreateCloudFoundrySpaceWorker createCloudFoundrySpaceWorker() {
-        return new CreateCloudFoundrySpaceWorker();
+    public CreateCloudFoundrySpaceWorker createCloudFoundrySpaceWorker(
+        CloudFoundrySpaceClient cloudFoundrySpaceClient) {
+        return new CreateCloudFoundrySpaceWorker(cloudFoundrySpaceClient);
     }
 
     @Bean

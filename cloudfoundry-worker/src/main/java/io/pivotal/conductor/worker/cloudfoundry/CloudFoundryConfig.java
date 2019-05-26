@@ -23,6 +23,12 @@ public class CloudFoundryConfig {
     private CloudFoundryProperties properties;
 
     @Bean
+    public CloudFoundrySpaceClient cloudFoundrySpaceClient() {
+        return new CloudFoundrySpaceClient(cloudFoundryOperations(),
+            cloudFoundryClient());
+    }
+
+    @Bean
     public ConnectionContext connectionContext() {
         return DefaultConnectionContext.builder()
             .apiHost(properties.getApiHost())
