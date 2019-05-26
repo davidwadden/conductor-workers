@@ -7,4 +7,5 @@ rootProject.name = 'conductor-workers'
 
 include('cloudfoundry-worker')
 include('github-worker')
+include('jira-worker')
 include('workers-app')

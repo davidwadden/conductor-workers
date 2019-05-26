@@ -18,3 +18,8 @@ portal:
     username: some-github-username
     token: some-github-token
     organization-name: some-github-organization-name
+  jira:
+    username: some-username
+    password: some-password
+    api-url: some-api-url
+    account-id: some-account-id

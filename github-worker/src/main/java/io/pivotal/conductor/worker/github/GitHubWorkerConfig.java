@@ -15,14 +15,14 @@ public class GitHubWorkerConfig {
 
     @Bean
     public CreateGitHubRepositoryWorker createGitHubRepositoryWorker(
-        RestOperations restOperations) {
-        return new CreateGitHubRepositoryWorker(properties, restOperations);
+        RestOperations gitHubRestOperations) {
+        return new CreateGitHubRepositoryWorker(properties, gitHubRestOperations);
     }
 
     @Bean
     public DeleteGitHubRepositoryWorker deleteGitHubRepositoryWorker(
-        RestOperations restOperations) {
-        return new DeleteGitHubRepositoryWorker(properties, restOperations);
+        RestOperations gitHubRestOperations) {
+        return new DeleteGitHubRepositoryWorker(properties, gitHubRestOperations);
     }
 
 }
