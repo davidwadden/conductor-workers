@@ -11,4 +11,9 @@ public class CloudFoundryWorkerConfig {
         return new CreateCloudFoundrySpaceWorker();
     }
 
+    @Bean
+    public CreateCloudFoundryRouteWorker createCloudFoundryRouteWorker() {
+        return new CreateCloudFoundryRouteWorker();
+    }
+
 }

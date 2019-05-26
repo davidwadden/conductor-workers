@@ -9,6 +9,12 @@ class CloudFoundryUtil {
         return String.format("%s-%s", baseSpaceName, spaceNameSuffix);
     }
 
+    static String deriveRouteHostname(String projectName, String hostnameSuffix) {
+        String prefix = sanitizeProjectName(projectName);
+        return String.format("%s%s", prefix, hostnameSuffix);
+    }
+
+
     private static String sanitizeProjectName(String projectName) {
         return projectName
             .replaceAll("[\\s]", "-")
