@@ -30,6 +30,7 @@ subprojects { subproject ->
             dependency("com.netflix.conductor:conductor-client:${conductorClientVersion}")
             dependency "org.cloudfoundry:cloudfoundry-client-reactor:${cloudfoundryClientVersion}"
             dependency "org.cloudfoundry:cloudfoundry-operations:${cloudfoundryClientVersion}"
+            dependency "org.hamcrest:hamcrest:${hamcrestVersion}"
         }
     }
 
