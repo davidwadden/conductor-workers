@@ -35,6 +35,12 @@ public class CloudFoundryConfig {
     }
 
     @Bean
+    public CloudFoundryServiceClient cloudFoundryServiceClient(
+        SpaceScopedCloudFoundryOperationsFactory spaceScopedCloudFoundryOperationsFactory) {
+        return new CloudFoundryServiceClient(spaceScopedCloudFoundryOperationsFactory);
+    }
+
+    @Bean
     public ConnectionContext connectionContext() {
         return DefaultConnectionContext.builder()
             .apiHost(properties.getApiHost())
@@ -74,13 +80,38 @@ public class CloudFoundryConfig {
     }
 
     @Bean
-    public CloudFoundryOperations cloudFoundryOperations() {
+    public DefaultCloudFoundryOperations.Builder defaultCloudFoundryOperationsBuilder() {
         return DefaultCloudFoundryOperations.builder()
             .cloudFoundryClient(cloudFoundryClient())
             .dopplerClient(dopplerClient())
             .uaaClient(uaaClient())
-            .organization(properties.getOrganization())
-            .build();
+            .organization(properties.getOrganization());
+    }
+
+    @Bean
+    public CloudFoundryOperations cloudFoundryOperations() {
+        return defaultCloudFoundryOperationsBuilder().build();
+    }
+
+    @Bean
+    public SpaceScopedCloudFoundryOperationsFactory spaceScopedCloudFoundryOperationsFactory() {
+        return new SpaceScopedCloudFoundryOperationsFactory(defaultCloudFoundryOperationsBuilder());
+    }
+
+    public static class SpaceScopedCloudFoundryOperationsFactory {
+
+        private final DefaultCloudFoundryOperations.Builder defaultCloudFoundryOperationsBuilder;
+
+        public SpaceScopedCloudFoundryOperationsFactory(
+            DefaultCloudFoundryOperations.Builder defaultCloudFoundryOperationsBuilder) {
+            this.defaultCloudFoundryOperationsBuilder = defaultCloudFoundryOperationsBuilder;
+        }
+
+        public CloudFoundryOperations makeCloudFoundryOperations(String spaceName) {
+            return defaultCloudFoundryOperationsBuilder
+                .space(spaceName)
+                .build();
+        }
     }
 
 }

@@ -22,8 +22,9 @@ public class CloudFoundryWorkerConfig {
     }
 
     @Bean
-    public CreateMysqlDatabaseServiceWorker createMysqlDatabaseServiceWorker() {
-        return new CreateMysqlDatabaseServiceWorker();
+    public CreateMysqlDatabaseServiceWorker createMysqlDatabaseServiceWorker(
+        CloudFoundryServiceClient cloudFoundryServiceClient) {
+        return new CreateMysqlDatabaseServiceWorker(cloudFoundryServiceClient);
     }
 
     @Bean
