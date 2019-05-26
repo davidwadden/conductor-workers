@@ -28,8 +28,9 @@ public class CloudFoundryWorkerConfig {
     }
 
     @Bean
-    public CreateRabbitMqServiceWorker createRabbitMqServiceWorker() {
-        return new CreateRabbitMqServiceWorker();
+    public CreateRabbitMqServiceWorker createRabbitMqServiceWorker(
+        CloudFoundryServiceClient cloudFoundryServiceClient) {
+        return new CreateRabbitMqServiceWorker(cloudFoundryServiceClient);
     }
 
     @Bean

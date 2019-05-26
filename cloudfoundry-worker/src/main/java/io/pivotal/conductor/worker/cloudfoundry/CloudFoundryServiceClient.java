@@ -28,4 +28,19 @@ public class CloudFoundryServiceClient {
             .block();
     }
 
+    public void createRabbitMqBroker(String instanceName, String spaceName) {
+        CloudFoundryOperations cloudFoundryOperations =
+            spaceScopedCloudFoundryOperationsFactory.makeCloudFoundryOperations(spaceName);
+
+        CreateServiceInstanceRequest request = CreateServiceInstanceRequest.builder()
+            .serviceInstanceName(instanceName)
+            .serviceName("cloudamqp")
+            .planName("lemur")
+            .build();
+
+        cloudFoundryOperations.services()
+            .createInstance(request)
+            .block();
+    }
+
 }
