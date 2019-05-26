@@ -1,0 +1,20 @@
+[
+  {
+    "name": "create_mysql_database",
+    "retryCount": 2,
+    "timeoutSeconds": 600,
+    "inputKeys": [
+      "projectName",
+      "spaceNameSuffix",
+      "spaceName",
+      "dryRun"
+    ],
+    "outputKeys": [
+      "databaseName"
+    ],
+    "timeoutPolicy": "TIME_OUT_WF",
+    "retryLogic": "FIXED",
+    "retryDelaySeconds": 5,
+    "responseTimeoutSeconds": 60
+  }
+]

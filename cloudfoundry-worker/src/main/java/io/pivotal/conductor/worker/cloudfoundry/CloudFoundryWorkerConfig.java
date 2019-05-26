@@ -16,4 +16,9 @@ public class CloudFoundryWorkerConfig {
         return new CreateCloudFoundryRouteWorker();
     }
 
+    @Bean
+    public CreateMysqlDatabaseServiceWorker createMysqlDatabaseServiceWorker() {
+        return new CreateMysqlDatabaseServiceWorker();
+    }
+
 }

@@ -14,6 +14,10 @@ class CloudFoundryUtil {
         return String.format("%s%s", prefix, hostnameSuffix);
     }
 
+    static String deriveDatabaseName(String projectName, String spaceNameSuffix) {
+        String prefix = sanitizeProjectName(projectName);
+        return String.format("%s-database-%s", prefix, spaceNameSuffix);
+    }
 
     private static String sanitizeProjectName(String projectName) {
         return projectName
@@ -23,5 +27,4 @@ class CloudFoundryUtil {
             .replaceAll("[^a-zA-Z0-9\\-]", "")
             .toLowerCase();
     }
-
 }
