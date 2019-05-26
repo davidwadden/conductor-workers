@@ -5,8 +5,11 @@ import com.netflix.conductor.client.task.WorkflowTaskCoordinator;
 import com.netflix.conductor.client.task.WorkflowTaskCoordinator.Builder;
 import com.netflix.conductor.client.worker.Worker;
 import io.pivotal.conductor.worker.app.ConductorConfig.ImportCloudFoundryWorkerConfig.PropertyBindingCloudFoundryProperties;
+import io.pivotal.conductor.worker.app.ConductorConfig.ImportGitHubWorkerConfig.PropertyBindingGitHubProperties;
 import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryProperties;
 import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryWorkerConfig;
+import io.pivotal.conductor.worker.github.GitHubWorkerConfig;
+import io.pivotal.conductor.worker.github.GitHubProperties;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -29,6 +32,15 @@ public class ConductorConfig {
 
         @ConfigurationProperties("portal.cloudfoundry")
         static class PropertyBindingCloudFoundryProperties extends CloudFoundryProperties {}
+    }
+
+    @EnableConfigurationProperties(PropertyBindingGitHubProperties.class)
+    @Import(GitHubWorkerConfig.class)
+    @Configuration
+    static class ImportGitHubWorkerConfig {
+
+        @ConfigurationProperties("portal.github")
+        static class PropertyBindingGitHubProperties extends GitHubProperties {}
     }
 
     @Bean

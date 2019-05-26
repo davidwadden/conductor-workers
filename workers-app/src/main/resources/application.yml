@@ -14,3 +14,7 @@ portal:
     password: some-cloudfoundry-password
     log-drain-url: some-cloudfoundry-log-drain-url
     domain: some-cloudfoundry-domain
+  github:
+    username: some-github-username
+    token: some-github-token
+    organization-name: some-github-organization-name
