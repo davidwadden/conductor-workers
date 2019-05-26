@@ -19,4 +19,10 @@ public class GitHubWorkerConfig {
         return new CreateGitHubRepositoryWorker(properties, restOperations);
     }
 
+    @Bean
+    public DeleteGitHubRepositoryWorker deleteGitHubRepositoryWorker(
+        RestOperations restOperations) {
+        return new DeleteGitHubRepositoryWorker(properties, restOperations);
+    }
+
 }
