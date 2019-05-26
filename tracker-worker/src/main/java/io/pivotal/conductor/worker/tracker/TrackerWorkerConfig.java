@@ -19,4 +19,10 @@ public class TrackerWorkerConfig {
         return new CreateTrackerProjectWorker(properties, trackerRestOperations);
     }
 
+    @Bean
+    public DeleteTrackerProjectWorker deleteTrackerProjectWorker(
+        RestOperations trackerRestOperations) {
+        return new DeleteTrackerProjectWorker(properties, trackerRestOperations);
+    }
+
 }
