@@ -21,4 +21,9 @@ public class CloudFoundryWorkerConfig {
         return new CreateMysqlDatabaseServiceWorker();
     }
 
+    @Bean
+    public CreateRabbitMqServiceWorker createRabbitMqServiceWorker() {
+        return new CreateRabbitMqServiceWorker();
+    }
+
 }

@@ -19,6 +19,11 @@ class CloudFoundryUtil {
         return String.format("%s-database-%s", prefix, spaceNameSuffix);
     }
 
+    static String deriveAmqpName(String projectName, String spaceNameSuffix) {
+        String prefix = sanitizeProjectName(projectName);
+        return String.format("%s-amqp-%s", prefix, spaceNameSuffix);
+    }
+
     private static String sanitizeProjectName(String projectName) {
         return projectName
             .replaceAll("[\\s]", "-")
