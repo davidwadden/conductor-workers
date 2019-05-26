@@ -13,4 +13,10 @@ public class JiraWorkerConfig {
     @Autowired
     private JiraProperties properties;
 
+    @Bean
+    public CreateJiraProjectWorker createJiraProjectWorker(RestOperations jiraRestOperations,
+        ProjectKeyGenerator projectKeyGenerator) {
+        return new CreateJiraProjectWorker(properties, jiraRestOperations, projectKeyGenerator);
+    }
+
 }

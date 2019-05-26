@@ -13,4 +13,8 @@ public class JiraConfig {
         return new RestTemplate();
     }
 
+    @Bean
+    public ProjectKeyGenerator projectKeyGenerator() {
+        return new RandomProjectKeyGenerator();
+    }
 }
