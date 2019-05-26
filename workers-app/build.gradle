@@ -5,6 +5,7 @@ plugins {
 dependencies {
     implementation(project(':bitbucket-worker'))
     implementation(project(':cloudfoundry-worker'))
+    implementation(project(':concourse-worker'))
     implementation(project(':github-worker'))
     implementation(project(':jira-worker'))
     implementation(project(':tracker-worker'))

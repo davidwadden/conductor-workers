@@ -18,6 +18,12 @@ portal:
     password: some-cloudfoundry-password
     log-drain-url: some-cloudfoundry-log-drain-url
     domain: some-cloudfoundry-domain
+  concourse:
+    api-host: https://ci.some-domain
+    team-name: some-concourse-team-name
+    username: some-concourse-username
+    password: some-concourse-password
+    should-expose-pipeline: false
   github:
     username: some-github-username
     token: some-github-token

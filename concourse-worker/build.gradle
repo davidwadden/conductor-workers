@@ -1,0 +1,14 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    api('com.netflix.conductor:conductor-client')
+    implementation('org.springframework:spring-context')
+    implementation('org.springframework:spring-web')
+
+    testImplementation('org.springframework:spring-test')
+    testImplementation('ch.qos.logback:logback-classic')
+    testImplementation('org.hamcrest:hamcrest')
+    testImplementation('org.skyscreamer:jsonassert')
+}

@@ -7,6 +7,7 @@ rootProject.name = 'conductor-workers'
 
 include('bitbucket-worker')
 include('cloudfoundry-worker')
+include('concourse-worker')
 include('github-worker')
 include('jira-worker')
 include('tracker-worker')
