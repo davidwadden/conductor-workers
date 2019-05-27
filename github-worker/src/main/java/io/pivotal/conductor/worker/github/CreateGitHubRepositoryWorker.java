@@ -49,7 +49,6 @@ public class CreateGitHubRepositoryWorker implements Worker {
                 String.format("https://api.github.com/orgs/%s/repos", properties.getOrganizationName());
             RequestEntity<CreateRepositoryRequestDto> requestEntity = RequestEntity
                 .post(URI.create(requestUrl))
-                .header(HttpHeaders.AUTHORIZATION, "token " + properties.getToken())
                 .header(HttpHeaders.ACCEPT, "application/vnd.github.v3+json")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new CreateRepositoryRequestDto(repositoryName));

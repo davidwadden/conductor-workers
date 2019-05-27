@@ -44,7 +44,6 @@ class DeleteGitHubRepositoryWorkerTest {
         mockServer
             .expect(requestTo("https://api.github.com/repos/some-org-name/some-repository-name"))
             .andExpect(method(HttpMethod.DELETE))
-            .andExpect(header(HttpHeaders.AUTHORIZATION, "token some-api-key"))
             .andExpect(header(HttpHeaders.ACCEPT, "application/vnd.github.v3+json"))
             .andRespond(withNoContent());
 

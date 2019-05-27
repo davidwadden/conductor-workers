@@ -38,7 +38,6 @@ public class DeleteGitHubRepositoryWorker implements Worker {
 
         RequestEntity<Void> requestEntity = RequestEntity
             .delete(URI.create(requestUrl))
-            .header(HttpHeaders.AUTHORIZATION, "token " + properties.getToken())
             .header(HttpHeaders.ACCEPT, "application/vnd.github.v3+json")
             .build();
 
