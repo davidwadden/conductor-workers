@@ -1,0 +1,19 @@
+[
+  {
+    "name": "create_bitbucket_repository",
+    "retryCount": 2,
+    "timeoutSeconds": 600,
+    "inputKeys": [
+      "projectName",
+      "projectKey",
+      "dryRun"
+    ],
+    "outputKeys": [
+      "repositoryUrl"
+    ],
+    "timeoutPolicy": "TIME_OUT_WF",
+    "retryLogic": "FIXED",
+    "retryDelaySeconds": 5,
+    "responseTimeoutSeconds": 60
+  }
+]
