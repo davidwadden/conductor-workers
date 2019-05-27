@@ -2,19 +2,16 @@ package io.pivotal.conductor.worker.jira;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.anything;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -65,16 +62,11 @@ class DeleteJiraProjectWorkerTest {
         properties.setPassword("some-password");
         properties.setAccountId("some-account-id");
 
-        String usernamePassword =
-            String.format("%s:%s", properties.getUsername(), properties.getPassword());
-        String expectedToken = Base64.getEncoder().encodeToString(usernamePassword.getBytes());
-
         String searchProjectsRequestUrl =
             String.format("%s/rest/api/3/project/search?startAt=0&maxResults=100", properties.getApiUrl());
         mockServer
             .expect(requestTo(searchProjectsRequestUrl))
             .andExpect(method(HttpMethod.GET))
-            .andExpect(header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", expectedToken)))
             .andRespond(withStatus(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(SEARCH_PROJECTS_RESPONSE_BODY));
@@ -84,7 +76,6 @@ class DeleteJiraProjectWorkerTest {
         mockServer
             .expect(requestTo(deleteProjectRequestUrl))
             .andExpect(method(HttpMethod.DELETE))
-            .andExpect(header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", expectedToken)))
             .andRespond(withStatus(HttpStatus.NO_CONTENT));
 
         Task task = new Task();

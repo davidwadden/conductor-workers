@@ -46,16 +46,12 @@ public class CreateJiraProjectWorker implements Worker {
 
         if (!dryRun) {
             String requestUrl = String.format("%s/rest/api/3/project", properties.getApiUrl());
-            String usernamePassword = String
-                .format("%s:%s", properties.getUsername(), properties.getPassword());
-            String authToken = Base64.getEncoder().encodeToString(usernamePassword.getBytes());
 
             CreateJiraProjectRequestDto requestDto =
                 new CreateJiraProjectRequestDto(projectKey, projectName, PROJECT_TYPE_KEY,
                     PROJECT_TEMPLATE_KEY, properties.getAccountId());
             RequestEntity<CreateJiraProjectRequestDto> requestEntity = RequestEntity
                 .post(URI.create(requestUrl))
-                .header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", authToken))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestDto);
 

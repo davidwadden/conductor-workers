@@ -42,16 +42,11 @@ public class DeleteJiraProjectWorker implements Worker {
 
         Boolean wasDeleted = false;
         if (!dryRun) {
-            String usernamePassword =
-                String.format("%s:%s", properties.getUsername(), properties.getPassword());
-            String authToken = Base64.getEncoder().encodeToString(usernamePassword.getBytes());
-
             String searchProjectsRequestUrl =
                 String.format("%s/rest/api/3/project/search?startAt=0&maxResults=100",
                     properties.getApiUrl());
             RequestEntity<Void> searchProjectsRequestEntity = RequestEntity
                 .get(URI.create(searchProjectsRequestUrl))
-                .header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", authToken))
                 .build();
 
             ResponseEntity<SearchProjectsResponseDto> searchProjectsResponseEntity =
@@ -77,7 +72,6 @@ public class DeleteJiraProjectWorker implements Worker {
 
             RequestEntity<Void> deleteProjectRequestEntity = RequestEntity
                 .delete(URI.create(deleteProjectRequestUrl))
-                .header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", authToken))
                 .build();
             restOperations.exchange(deleteProjectRequestEntity, Void.class);
 

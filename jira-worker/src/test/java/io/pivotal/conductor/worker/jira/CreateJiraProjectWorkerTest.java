@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
@@ -13,7 +12,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -51,16 +48,14 @@ class CreateJiraProjectWorkerTest {
 
     @Test
     void execute() throws JsonProcessingException {
-        doReturn("PROJECT-KEY").when(mockProjectKeyGenerator).generateKey();
+        doReturn("PROJECT-KEY")
+            .when(mockProjectKeyGenerator)
+            .generateKey();
 
         properties.setApiUrl("https://some-api-url");
         properties.setUsername("some-username");
         properties.setPassword("some-password");
         properties.setAccountId("some-account-id");
-
-        String usernamePassword = String
-            .format("%s:%s", properties.getUsername(), properties.getPassword());
-        String expectedToken = Base64.getEncoder().encodeToString(usernamePassword.getBytes());
 
         Map<String, Object> requestDto = new HashMap<>() {{
             put("key", "PROJECT-KEY");
@@ -74,7 +69,6 @@ class CreateJiraProjectWorkerTest {
         mockServer
             .expect(requestTo(String.format("%s/rest/api/3/project", properties.getApiUrl())))
             .andExpect(method(HttpMethod.POST))
-            .andExpect(header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", expectedToken)))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(content().json(requestBody))
             .andRespond(withStatus(HttpStatus.CREATED));
@@ -98,7 +92,7 @@ class CreateJiraProjectWorkerTest {
     }
 
     @Test
-    void dryRun() throws JsonProcessingException {
+    void dryRun() {
         doReturn("PROJECT-KEY").when(mockProjectKeyGenerator).generateKey();
 
         properties.setApiUrl("https://some-api-url");
