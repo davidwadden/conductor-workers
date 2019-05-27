@@ -32,4 +32,10 @@ public class BitbucketWorkerConfig {
         return new CreateBitbucketRepositoryWorker(properties, bitbucketRestOperations);
     }
 
+    @Bean
+    public DeleteBitbucketRepositoryWorker deleteBitbucketRepositoryWorker(
+        RestOperations bitbucketRestOperations) {
+        return new DeleteBitbucketRepositoryWorker(properties, bitbucketRestOperations);
+    }
+
 }
