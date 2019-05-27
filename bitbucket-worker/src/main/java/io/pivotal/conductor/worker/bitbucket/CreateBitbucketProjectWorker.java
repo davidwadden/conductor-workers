@@ -6,11 +6,9 @@ import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.metadata.tasks.TaskResult.Status;
 import java.net.URI;
-import java.util.Base64;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.web.client.RestOperations;
@@ -45,15 +43,11 @@ public class CreateBitbucketProjectWorker implements Worker {
             // https://developer.atlassian.com/bitbucket/api/2/reference/resource/repositories
             String requestUrl =
                 String.format("https://api.bitbucket.org/2.0/teams/%s/projects/", properties.getTeamName());
-            String usernamePassword =
-                String.format("%s:%s", properties.getUsername(), properties.getPassword());
-            String authToken = Base64.getEncoder().encodeToString(usernamePassword.getBytes());
 
             CreateBitbucketProjectRequestDto requestDto =
                 new CreateBitbucketProjectRequestDto(projectName, projectKey, false);
             RequestEntity<CreateBitbucketProjectRequestDto> requestEntity = RequestEntity
                 .post(URI.create(requestUrl))
-                .header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", authToken))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestDto);
 

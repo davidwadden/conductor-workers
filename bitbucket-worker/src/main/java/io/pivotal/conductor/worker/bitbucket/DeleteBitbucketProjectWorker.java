@@ -7,13 +7,11 @@ import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.metadata.tasks.TaskResult.Status;
 import java.net.URI;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestOperations;
@@ -43,15 +41,10 @@ public class DeleteBitbucketProjectWorker implements Worker {
 
         Boolean wasDeleted = false;
         if (!dryRun) {
-            String usernamePassword =
-                String.format("%s:%s", properties.getUsername(), properties.getPassword());
-            String authToken = Base64.getEncoder().encodeToString(usernamePassword.getBytes());
-
             String listProjectsRequestUrl =
                 String.format("https://api.bitbucket.org/2.0/teams/%s/projects/?pagelen=100", properties.getTeamName());
             RequestEntity<Void> listProjectsRequestEntity = RequestEntity
                 .get(URI.create(listProjectsRequestUrl))
-                .header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", authToken))
                 .build();
 
             ResponseEntity<SearchProjectsResponseDto> listProjectsResponseEntity =
@@ -76,7 +69,6 @@ public class DeleteBitbucketProjectWorker implements Worker {
 
             RequestEntity<Void> deleteProjectRequestEntity = RequestEntity
                 .delete(URI.create(deleteProjectRequestUrl))
-                .header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", authToken))
                 .build();
 
             restOperations.exchange(deleteProjectRequestEntity, Void.class);

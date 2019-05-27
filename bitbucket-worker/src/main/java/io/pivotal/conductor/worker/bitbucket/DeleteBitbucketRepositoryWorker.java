@@ -5,8 +5,6 @@ import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.metadata.tasks.TaskResult.Status;
 import java.net.URI;
-import java.util.Base64;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
 import org.springframework.web.client.RestOperations;
 
@@ -39,13 +37,9 @@ public class DeleteBitbucketRepositoryWorker implements Worker {
             String requestUrl =
                 String.format("https://api.bitbucket.org/2.0/repositories/%s/%s",
                     properties.getTeamName(), repositoryName);
-            String usernamePassword =
-                String.format("%s:%s", properties.getUsername(), properties.getPassword());
-            String authToken = Base64.getEncoder().encodeToString(usernamePassword.getBytes());
 
             RequestEntity<Void> requestEntity = RequestEntity
                 .delete(URI.create(requestUrl))
-                .header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", authToken))
                 .build();
 
             restOperations.exchange(requestEntity, Void.class);

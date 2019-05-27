@@ -1,22 +1,16 @@
 package io.pivotal.conductor.worker.bitbucket;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -61,14 +55,9 @@ class DeleteBitbucketProjectWorkerTest {
         properties.setPassword("some-password");
         properties.setTeamName("some-team-name");
 
-        String usernamePassword =
-            String.format("%s:%s", properties.getUsername(), properties.getPassword());
-        String authToken = Base64.getEncoder().encodeToString(usernamePassword.getBytes());
-
         mockServer
             .expect(requestTo("https://api.bitbucket.org/2.0/teams/some-team-name/projects/?pagelen=100"))
             .andExpect(method(HttpMethod.GET))
-            .andExpect(header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", authToken)))
             .andRespond(
                 withStatus(HttpStatus.OK)
                     .contentType(MediaType.APPLICATION_JSON)
@@ -78,7 +67,6 @@ class DeleteBitbucketProjectWorkerTest {
         mockServer
             .expect(requestTo("https://api.bitbucket.org/2.0/teams/some-team-name/projects/RAND"))
             .andExpect(method(HttpMethod.DELETE))
-            .andExpect(header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", authToken)))
             .andRespond(withStatus(HttpStatus.NO_CONTENT));
 
         Task task = new Task();
@@ -102,14 +90,9 @@ class DeleteBitbucketProjectWorkerTest {
         properties.setPassword("some-password");
         properties.setTeamName("some-team-name");
 
-        String usernamePassword =
-            String.format("%s:%s", properties.getUsername(), properties.getPassword());
-        String authToken = Base64.getEncoder().encodeToString(usernamePassword.getBytes());
-
         mockServer
             .expect(requestTo("https://api.bitbucket.org/2.0/teams/some-team-name/projects/?pagelen=100"))
             .andExpect(method(HttpMethod.GET))
-            .andExpect(header(HttpHeaders.AUTHORIZATION, String.format("Basic %s", authToken)))
             .andRespond(
                 withStatus(HttpStatus.OK)
                     .contentType(MediaType.APPLICATION_JSON)
