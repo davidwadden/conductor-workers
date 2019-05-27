@@ -2,13 +2,11 @@ package io.pivotal.conductor.worker.tracker;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.anything;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withNoContent;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import java.io.IOException;
@@ -28,8 +26,6 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 class DeleteTrackerProjectWorkerTest {
-
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private TrackerProperties properties;
     private MockRestServiceServer mockServer;
@@ -57,7 +53,6 @@ class DeleteTrackerProjectWorkerTest {
         mockServer
             .expect(requestTo("https://www.pivotaltracker.com/services/v5/projects?account_ids=90"))
             .andExpect(method(HttpMethod.GET))
-            .andExpect(header("X-TrackerToken", "some-api-key"))
             .andRespond(withSuccess(getProjectsResponseBody, MediaType.APPLICATION_JSON));
 
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -66,7 +61,6 @@ class DeleteTrackerProjectWorkerTest {
         mockServer
             .expect(requestTo("https://www.pivotaltracker.com/services/v5/projects/100"))
             .andExpect(method(HttpMethod.DELETE))
-            .andExpect(header("X-TrackerToken", "some-api-key"))
             .andRespond(
                 withNoContent()
                     .headers(httpHeaders)
@@ -100,7 +94,6 @@ class DeleteTrackerProjectWorkerTest {
         mockServer
             .expect(anything())
             .andExpect(method(HttpMethod.GET))
-            .andExpect(header("X-TrackerToken", "some-api-key"))
             .andRespond(withSuccess(getProjectsResponseBody, MediaType.APPLICATION_JSON));
 
         Task task = new Task();

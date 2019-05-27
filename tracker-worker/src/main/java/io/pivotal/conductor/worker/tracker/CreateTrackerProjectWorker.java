@@ -56,7 +56,6 @@ public class CreateTrackerProjectWorker implements Worker {
 
             RequestEntity<CreateTrackerProjectRequestDto> requestEntity = RequestEntity
                 .post(URI.create(PIVOTAL_TRACKER_PROJECT_URI))
-                .header("X-TrackerToken", properties.getApiKey())
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestDto);
             ResponseEntity<TrackerProjectResponseDto> responseEntity =

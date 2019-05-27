@@ -45,14 +45,14 @@ public class DeleteTrackerProjectWorker implements Worker {
 
         Boolean wasDeleted = false;
         if (!dryRun) {
-            URI getProjectRequestUri = UriComponentsBuilder.fromUri(PIVOTAL_TRACKER_PROJECT_URI)
+            URI getProjectRequestUri = UriComponentsBuilder
+                .fromUri(PIVOTAL_TRACKER_PROJECT_URI)
                 .queryParam("account_ids", properties.getAccountId())
                 .build()
                 .toUri();
 
             RequestEntity<Void> requestEntity = RequestEntity
                 .get(getProjectRequestUri)
-                .header("X-TrackerToken", properties.getApiKey())
                 .build();
 
             //noinspection Convert2Diamond
@@ -78,11 +78,9 @@ public class DeleteTrackerProjectWorker implements Worker {
 
             RequestEntity<Void> deleteProjectRequestEntity = RequestEntity
                 .delete(deleteProjectRequestUri)
-                .header("X-TrackerToken", properties.getApiKey())
                 .build();
 
             restOperations.exchange(deleteProjectRequestEntity, Void.class);
-
             wasDeleted = true;
         }
 

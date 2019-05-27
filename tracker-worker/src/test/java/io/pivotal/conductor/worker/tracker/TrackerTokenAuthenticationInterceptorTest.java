@@ -1,16 +1,17 @@
 package io.pivotal.conductor.worker.tracker;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import io.pivotal.conductor.worker.tracker.CreateTrackerProjectWorker.CreateTrackerProjectRequestDto;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,39 +21,60 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
-class CreateTrackerProjectWorkerTest {
+@ContextConfiguration(classes = {
+    TrackerTokenAuthenticationInterceptorTest.ContextConfiguration.class,
+})
+@ExtendWith(SpringExtension.class)
+class TrackerTokenAuthenticationInterceptorTest {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-
+    @Autowired
     private TrackerProperties properties;
-    private MockRestServiceServer mockServer;
-
+    @Autowired
     private CreateTrackerProjectWorker worker;
+    @Autowired
+    private RestOperations restOperations;
+    private MockRestServiceServer mockServer;
 
     @BeforeEach
     void setUp() {
-        properties = new TrackerProperties();
-        RestTemplate restTemplate = new RestTemplate();
-        mockServer = MockRestServiceServer.createServer(restTemplate);
-
-        worker = new CreateTrackerProjectWorker(properties, restTemplate);
+        mockServer = MockRestServiceServer.createServer((RestTemplate) restOperations);
     }
 
     @Test
-    void execute() throws IOException, URISyntaxException {
-        properties.setApiKey("some-api-key");
-        properties.setAccountId(90);
+    void interceptorTest() {
+        mockServer
+            .expect(requestTo(startsWith("https://www.pivotaltracker.com")))
+            .andExpect(header("X-TrackerToken", "some-api-key"))
+            .andRespond(withSuccess());
 
-        CreateTrackerProjectRequestDto requestDto =
-            new CreateTrackerProjectRequestDto("Some Project Name", "public", 90);
-        String requestBody = objectMapper.writeValueAsString(requestDto);
+        String requestUrl = "https://www.pivotaltracker.com/some-api-endpoint";
 
+        RequestEntity<Void> requestEntity = RequestEntity
+            .get(URI.create(requestUrl))
+            .build();
+
+        restOperations.exchange(requestEntity, Void.class);
+
+        mockServer.verify();
+    }
+
+    @Test
+    void workerTest() throws IOException, URISyntaxException {
         Path postResponsePath =
             Paths.get(this.getClass().getResource("/tracker/post-projects-response.json").toURI());
         String responseBody = new String(Files.readAllBytes(postResponsePath));
@@ -63,8 +85,8 @@ class CreateTrackerProjectWorkerTest {
         mockServer
             .expect(requestTo("https://www.pivotaltracker.com/services/v5/projects"))
             .andExpect(method(HttpMethod.POST))
+            .andExpect(header("X-TrackerToken", "some-api-key"))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(content().json(requestBody))
             .andRespond(
                 withSuccess(responseBody, MediaType.APPLICATION_JSON)
                     .headers(httpHeaders)
@@ -72,10 +94,8 @@ class CreateTrackerProjectWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-
         Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name");
-            put("stories", Collections.emptyMap());
+            put("projectName", "some-project-name");
         }};
         task.setInputData(inputData);
 
@@ -88,27 +108,18 @@ class CreateTrackerProjectWorkerTest {
             .containsEntry("projectUrl", "https://www.pivotaltracker.com/n/projects/678");
     }
 
-    @Test
-    void dryRun() {
-        properties.setApiKey("some-api-key");
-        properties.setAccountId(90);
+    @Import(TrackerWorkerConfig.class)
+    @Configuration
+    public static class ContextConfiguration {
 
-        Task task = new Task();
-        task.setStatus(Task.Status.SCHEDULED);
+        @Bean
+        public TrackerProperties trackerProperties() {
+            TrackerProperties trackerProperties = new TrackerProperties();
 
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name");
-            put("stories", Collections.emptyMap());
-            put("dryRun", "true");
-        }};
-        task.setInputData(inputData);
+            trackerProperties.setApiKey("some-api-key");
+            trackerProperties.setAccountId(978);
 
-        TaskResult taskResult = worker.execute(task);
-
-        mockServer.verify();
-
-        assertThat(taskResult.getStatus()).isEqualTo(TaskResult.Status.COMPLETED);
-        assertThat(taskResult.getOutputData())
-            .containsEntry("projectUrl", "https://www.pivotaltracker.com/n/projects/-1");
+            return trackerProperties;
+        }
     }
 }
