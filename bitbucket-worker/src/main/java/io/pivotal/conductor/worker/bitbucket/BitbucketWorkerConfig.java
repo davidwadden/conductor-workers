@@ -20,4 +20,10 @@ public class BitbucketWorkerConfig {
         return new CreateBitbucketProjectWorker(properties, bitbucketRestOperations, bitbucketProjectKeyGenerator);
     }
 
+    @Bean
+    public DeleteBitbucketProjectWorker deleteBitbucketProjectWorker(
+        RestOperations bitbucketRestOperations) {
+        return new DeleteBitbucketProjectWorker(properties, bitbucketRestOperations);
+    }
+
 }
