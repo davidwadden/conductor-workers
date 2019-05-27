@@ -15,8 +15,8 @@ public class JiraWorkerConfig {
 
     @Bean
     public CreateJiraProjectWorker createJiraProjectWorker(RestOperations jiraRestOperations,
-        ProjectKeyGenerator projectKeyGenerator) {
-        return new CreateJiraProjectWorker(properties, jiraRestOperations, projectKeyGenerator);
+        ProjectKeyGenerator jiraProjectKeyGenerator) {
+        return new CreateJiraProjectWorker(properties, jiraRestOperations, jiraProjectKeyGenerator);
     }
 
     @Bean

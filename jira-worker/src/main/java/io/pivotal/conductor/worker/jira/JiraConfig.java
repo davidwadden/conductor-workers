@@ -14,7 +14,7 @@ public class JiraConfig {
     }
 
     @Bean
-    public ProjectKeyGenerator projectKeyGenerator() {
+    public ProjectKeyGenerator jiraProjectKeyGenerator() {
         return new RandomProjectKeyGenerator();
     }
 }

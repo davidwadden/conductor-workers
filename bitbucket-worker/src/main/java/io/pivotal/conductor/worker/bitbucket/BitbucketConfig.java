@@ -13,4 +13,9 @@ public class BitbucketConfig {
         return new RestTemplate();
     }
 
+    @Bean
+    public ProjectKeyGenerator bitbucketProjectKeyGenerator() {
+        return new RandomProjectKeyGenerator();
+    }
+
 }
