@@ -6,6 +6,7 @@ dependencies {
     api('com.netflix.conductor:conductor-client')
     implementation('org.springframework:spring-context')
     implementation('org.springframework:spring-web')
+    implementation('org.eclipse.jgit:org.eclipse.jgit')
 
     testImplementation('org.springframework:spring-test')
     testImplementation('ch.qos.logback:logback-classic')

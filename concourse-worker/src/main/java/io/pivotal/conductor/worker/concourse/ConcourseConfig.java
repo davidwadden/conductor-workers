@@ -3,6 +3,7 @@ package io.pivotal.conductor.worker.concourse;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.pivotal.conductor.worker.concourse.SetConcoursePipelineWorker.CloudFoundryProperties;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Base64;
@@ -29,6 +30,14 @@ public class ConcourseConfig {
 
     @Autowired
     private ConcourseProperties properties;
+
+    @Bean
+    public CloudFoundryProperties cloudFoundryProperties() {
+        CloudFoundryProperties properties = new CloudFoundryProperties();
+        properties.setUsername("some-cf-username");
+        properties.setUsername("some-cf-password");
+        return properties;
+    }
 
     @Bean
     public RestOperations concourseRestOperations() {

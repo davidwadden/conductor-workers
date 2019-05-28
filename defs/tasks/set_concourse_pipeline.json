@@ -1,0 +1,19 @@
+[
+  {
+    "name": "set_concourse_pipeline",
+    "retryCount": 2,
+    "timeoutSeconds": 600,
+    "inputKeys": [
+      "projectName",
+      "repositoryUrl",
+      "dryRun"
+    ],
+    "outputKeys": [
+      "pipelineUrl"
+    ],
+    "timeoutPolicy": "TIME_OUT_WF",
+    "retryLogic": "FIXED",
+    "retryDelaySeconds": 5,
+    "responseTimeoutSeconds": 60
+  }
+]
