@@ -13,4 +13,10 @@ public class ConcourseWorkerConfig {
     @Autowired
     private ConcourseProperties properties;
 
+    @Bean
+    public DeleteConcoursePipelineWorker deleteConcoursePipelineWorker(
+        RestOperations concourseRestOperations) {
+        return new DeleteConcoursePipelineWorker(properties, concourseRestOperations);
+    }
+
 }
