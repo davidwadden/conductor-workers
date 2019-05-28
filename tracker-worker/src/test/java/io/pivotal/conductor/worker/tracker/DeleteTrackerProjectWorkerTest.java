@@ -15,7 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,9 +68,7 @@ class DeleteTrackerProjectWorkerTest {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
 
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name");
-        }};
+        Map<String, Object> inputData = Map.of("projectName", "Some Project Name");
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
@@ -99,9 +96,7 @@ class DeleteTrackerProjectWorkerTest {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
 
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Project That Does Not Exist");
-        }};
+        Map<String, Object> inputData = Map.of("projectName", "Project That Does Not Exist");
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
@@ -120,10 +115,10 @@ class DeleteTrackerProjectWorkerTest {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
 
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name");
-            put("dryRun", "true");
-        }};
+        Map<String, Object> inputData = Map.of(
+            "projectName", "Some Project Name",
+            "dryRun", "true"
+        );
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);

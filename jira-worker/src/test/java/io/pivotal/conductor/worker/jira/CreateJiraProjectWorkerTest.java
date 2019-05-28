@@ -12,7 +12,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,13 +56,13 @@ class CreateJiraProjectWorkerTest {
         properties.setPassword("some-password");
         properties.setAccountId("some-account-id");
 
-        Map<String, Object> requestDto = new HashMap<>() {{
-            put("key", "PROJECT-KEY");
-            put("name", "Some Project Name!");
-            put("projectTypeKey", "software");
-            put("projectTemplateKey", "com.pyxis.greenhopper.jira:gh-scrum-template");
-            put("leadAccountId", "some-account-id");
-        }};
+        Map<String, Object> requestDto = Map.of(
+            "key", "PROJECT-KEY",
+            "name", "Some Project Name!",
+            "projectTypeKey", "software",
+            "projectTemplateKey", "com.pyxis.greenhopper.jira:gh-scrum-template",
+            "leadAccountId", "some-account-id"
+        );
         String requestBody = objectMapper.writeValueAsString(requestDto);
 
         mockServer
@@ -75,9 +74,7 @@ class CreateJiraProjectWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name!");
-        }};
+        Map<String, Object> inputData = Map.of("projectName", "Some Project Name!");
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
@@ -102,10 +99,10 @@ class CreateJiraProjectWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name!");
-            put("dryRun", "true");
-        }};
+        Map<String, Object> inputData = Map.of(
+            "projectName", "Some Project Name!",
+            "dryRun", "true"
+        );
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);

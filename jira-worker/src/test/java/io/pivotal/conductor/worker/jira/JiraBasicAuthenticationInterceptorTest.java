@@ -10,7 +10,6 @@ import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import java.net.URI;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,9 +82,7 @@ class JiraBasicAuthenticationInterceptorTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "some-project-name");
-        }};
+        Map<String, Object> inputData = Map.of("projectName", "some-project-name");
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);

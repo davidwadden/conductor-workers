@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -73,10 +72,10 @@ class CreateTrackerProjectWorkerTest {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
 
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name");
-            put("stories", Collections.emptyMap());
-        }};
+        Map<String, Object> inputData = Map.of(
+            "projectName", "Some Project Name",
+            "stories", Collections.emptyMap()
+        );
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
@@ -96,11 +95,11 @@ class CreateTrackerProjectWorkerTest {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
 
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name");
-            put("stories", Collections.emptyMap());
-            put("dryRun", "true");
-        }};
+        Map<String, Object> inputData = Map.of(
+            "projectName", "Some Project Name",
+            "stories", Collections.emptyMap(),
+            "dryRun", "true"
+        );
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);

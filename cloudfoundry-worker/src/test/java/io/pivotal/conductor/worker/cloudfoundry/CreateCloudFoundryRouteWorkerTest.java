@@ -6,7 +6,6 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,16 +33,17 @@ class CreateCloudFoundryRouteWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name!");
-            put("hostnameSuffix", "-some-suffix");
-            put("spaceName", "some-space-name");
-        }};
+        Map<String, Object> inputData = Map.of(
+            "projectName", "Some Project Name!",
+            "hostnameSuffix", "-some-suffix",
+            "spaceName", "some-space-name"
+        );
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
 
-        verify(mockCloudFoundryRouteClient).createRoute("some-space-name", "some-project-name-some-suffix", "some-domain");
+        verify(mockCloudFoundryRouteClient)
+            .createRoute("some-space-name", "some-project-name-some-suffix", "some-domain");
 
         assertThat(taskResult.getStatus()).isEqualTo(TaskResult.Status.COMPLETED);
         assertThat(taskResult.getOutputData())
@@ -56,12 +56,12 @@ class CreateCloudFoundryRouteWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name!");
-            put("hostnameSuffix", "-some-suffix");
-            put("spaceName", "some-space-name");
-            put("dryRun", "true");
-        }};
+        Map<String, Object> inputData = Map.of(
+            "projectName", "Some Project Name!",
+            "hostnameSuffix", "-some-suffix",
+            "spaceName", "some-space-name",
+            "dryRun", "true"
+        );
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);

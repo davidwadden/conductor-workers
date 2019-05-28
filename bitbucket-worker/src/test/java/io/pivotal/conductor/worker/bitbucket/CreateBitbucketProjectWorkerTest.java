@@ -12,7 +12,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,11 +55,11 @@ class CreateBitbucketProjectWorkerTest {
         properties.setPassword("some-password");
         properties.setTeamName("some-team-name");
 
-        Map<String, Object> responseDto = new HashMap<>() {{
-            put("name", "Some Project Name!");
-            put("key", "PROJECT-KEY");
-            put("is_private", false);
-        }};
+        Map<String, Object> responseDto = Map.of(
+            "name", "Some Project Name!",
+            "key", "PROJECT-KEY",
+            "is_private", false
+        );
         String responseBody = objectMapper.writeValueAsString(responseDto);
 
         mockServer
@@ -72,9 +71,7 @@ class CreateBitbucketProjectWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name!");
-        }};
+        Map<String, Object> inputData = Map.of("projectName", "Some Project Name!");
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
@@ -99,10 +96,10 @@ class CreateBitbucketProjectWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name!");
-            put("dryRun", "true");
-        }};
+        Map<String, Object> inputData = Map.of(
+            "projectName", "Some Project Name!",
+            "dryRun", "true"
+        );
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);

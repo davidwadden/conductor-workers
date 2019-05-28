@@ -8,7 +8,6 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -80,9 +79,7 @@ class DeleteJiraProjectWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name!");
-        }};
+        Map<String, Object> inputData = Map.of("projectName", "Some Project Name!");
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
@@ -109,9 +106,7 @@ class DeleteJiraProjectWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name!");
-        }};
+        Map<String, Object> inputData = Map.of("projectName", "Some Project Name!");
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
@@ -131,10 +126,10 @@ class DeleteJiraProjectWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name!");
-            put("dryRun", "true");
-        }};
+        Map<String, Object> inputData = Map.of(
+            "projectName", "Some Project Name!",
+            "dryRun", "true"
+        );
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);

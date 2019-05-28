@@ -14,7 +14,6 @@ import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import java.net.URI;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,11 +69,11 @@ class ConcoursePasswordGrantInterceptorTest {
             add("scope", "openid profile email federated:id groups");
         }};
 
-        Map<String, Object> responseDto = new HashMap<>() {{
-            put("access_token", "some-access-token");
-            put("token_type", "Bearer");
-            put("expiry", "2019-05-29T00:11:26Z");
-        }};
+        Map<String, Object> responseDto = Map.of(
+            "access_token", "some-access-token",
+            "token_type", "Bearer",
+            "expiry", "2019-05-29T00:11:26Z"
+        );
         String responseBody = objectMapper.writeValueAsString(responseDto);
 
         String authToken =
@@ -120,11 +119,11 @@ class ConcoursePasswordGrantInterceptorTest {
             add("scope", "openid profile email federated:id groups");
         }};
 
-        Map<String, Object> responseDto = new HashMap<>() {{
-            put("access_token", "some-access-token");
-            put("token_type", "Bearer");
-            put("expiry", "2019-05-29T00:11:26Z");
-        }};
+        Map<String, Object> responseDto = Map.of(
+            "access_token", "some-access-token",
+            "token_type", "Bearer",
+            "expiry", "2019-05-29T00:11:26Z"
+        );
         String responseBody = objectMapper.writeValueAsString(responseDto);
 
         String authToken =
@@ -148,9 +147,7 @@ class ConcoursePasswordGrantInterceptorTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name!");
-        }};
+        Map<String, Object> inputData = Map.of("projectName", "Some Project Name!");
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);

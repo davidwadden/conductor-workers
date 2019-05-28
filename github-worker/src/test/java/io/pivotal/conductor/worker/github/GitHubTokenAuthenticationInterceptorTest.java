@@ -13,7 +13,6 @@ import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import io.pivotal.conductor.worker.github.CreateGitHubRepositoryWorker.CreateRepositoryResponseDto;
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -86,9 +85,7 @@ class GitHubTokenAuthenticationInterceptorTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Repository Name!");
-        }};
+        Map<String, Object> inputData = Map.of("projectName", "Some Repository Name!");
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);

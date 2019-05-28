@@ -1,13 +1,11 @@
 package io.pivotal.conductor.worker.cloudfoundry;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,11 +29,11 @@ class CreateRabbitMqServiceWorkerTest {
     void execute() {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name!");
-            put("spaceNameSuffix", "some-suffix");
-            put("spaceName", "some-space-name");
-        }};
+        Map<String, Object> inputData = Map.of(
+            "projectName", "Some Project Name!",
+            "spaceNameSuffix", "some-suffix",
+            "spaceName", "some-space-name"
+        );
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
@@ -52,12 +50,12 @@ class CreateRabbitMqServiceWorkerTest {
     void dryRun() {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = new HashMap<>() {{
-            put("projectName", "Some Project Name!");
-            put("spaceNameSuffix", "some-suffix");
-            put("spaceName", "some-space-name");
-            put("dryRun", "true");
-        }};
+        Map<String, Object> inputData = Map.of(
+            "projectName", "Some Project Name!",
+            "spaceNameSuffix", "some-suffix",
+            "spaceName", "some-space-name",
+            "dryRun", "true"
+        );
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
