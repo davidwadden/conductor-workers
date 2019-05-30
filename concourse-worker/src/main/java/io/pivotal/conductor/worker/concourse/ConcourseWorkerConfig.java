@@ -34,4 +34,10 @@ public class ConcourseWorkerConfig {
         return new ExposeConcoursePipelineWorker(properties, concourseOAuth2RestOperations);
     }
 
+    @Bean
+    public UnpauseConcoursePipelineWorker unpauseConcoursePipelineWorker(
+        RestOperations concourseOAuth2RestOperations) {
+        return new UnpauseConcoursePipelineWorker(properties, concourseOAuth2RestOperations);
+    }
+
 }
