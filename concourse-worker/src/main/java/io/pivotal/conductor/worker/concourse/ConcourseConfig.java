@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.security.oauth2.client.OAuth2RestOperations;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
+import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestOperations;
@@ -49,6 +54,23 @@ public class ConcourseConfig {
     @Bean
     public RestOperations concourseTokenRestOperations() {
         return new RestTemplate();
+    }
+
+    @Bean
+    public OAuth2RestOperations concourseOAuth2RestOperations() {
+        return new OAuth2RestTemplate(concourseOAuth2ProtectedResourceDetails());
+    }
+
+    @Bean
+    public OAuth2ProtectedResourceDetails concourseOAuth2ProtectedResourceDetails() {
+        ResourceOwnerPasswordResourceDetails resourceDetails = new ResourceOwnerPasswordResourceDetails();
+        resourceDetails.setAccessTokenUri(properties.getApiHost() + "/sky/token");
+        resourceDetails.setUsername(properties.getUsername());
+        resourceDetails.setPassword(properties.getPassword());
+        resourceDetails.setClientId("fly");
+        resourceDetails.setClientSecret("Zmx5");
+        resourceDetails.setScope(List.of("openid", "profile", "email", "federated:id", "groups"));
+        return resourceDetails;
     }
 
     @Bean
