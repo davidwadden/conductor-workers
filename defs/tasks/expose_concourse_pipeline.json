@@ -1,0 +1,17 @@
+[
+  {
+    "name": "expose_concourse_pipeline",
+    "retryCount": 2,
+    "timeoutSeconds": 600,
+    "inputKeys": [
+      "projectName",
+      "dryRun"
+    ],
+    "outputKeys": [
+    ],
+    "timeoutPolicy": "TIME_OUT_WF",
+    "retryLogic": "FIXED",
+    "retryDelaySeconds": 5,
+    "responseTimeoutSeconds": 60
+  }
+]

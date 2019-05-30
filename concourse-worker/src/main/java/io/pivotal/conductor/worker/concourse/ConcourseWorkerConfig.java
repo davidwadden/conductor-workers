@@ -28,4 +28,10 @@ public class ConcourseWorkerConfig {
         return new DeleteConcoursePipelineWorker(properties, concourseRestOperations);
     }
 
+    @Bean
+    public ExposeConcoursePipelineWorker exposeConcoursePipelineWorker(
+        RestOperations concourseRestOperations) {
+        return new ExposeConcoursePipelineWorker(properties, concourseRestOperations);
+    }
+
 }
