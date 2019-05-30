@@ -28,10 +28,11 @@ subprojects { subproject ->
 
         dependencies {
             dependency("com.netflix.conductor:conductor-client:${conductorClientVersion}")
-            dependency "org.cloudfoundry:cloudfoundry-client-reactor:${cloudfoundryClientVersion}"
-            dependency "org.cloudfoundry:cloudfoundry-operations:${cloudfoundryClientVersion}"
-            dependency "org.eclipse.jgit:org.eclipse.jgit:${jgitVersion}"
-            dependency "org.hamcrest:hamcrest:${hamcrestVersion}"
+            dependency("org.springframework.security.oauth:spring-security-oauth2:${springSecurityOAuth2Version}")
+            dependency("org.cloudfoundry:cloudfoundry-client-reactor:${cloudfoundryClientVersion}")
+            dependency("org.cloudfoundry:cloudfoundry-operations:${cloudfoundryClientVersion}")
+            dependency("org.eclipse.jgit:org.eclipse.jgit:${jgitVersion}")
+            dependency("org.hamcrest:hamcrest:${hamcrestVersion}")
         }
     }
 

@@ -6,6 +6,7 @@ dependencies {
     api('com.netflix.conductor:conductor-client')
     implementation('org.springframework:spring-context')
     implementation('org.springframework:spring-web')
+    implementation('org.springframework.security.oauth:spring-security-oauth2')
     implementation('org.eclipse.jgit:org.eclipse.jgit')
 
     testImplementation('org.springframework:spring-test')
