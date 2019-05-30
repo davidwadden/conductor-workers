@@ -24,14 +24,14 @@ public class ConcourseWorkerConfig {
 
     @Bean
     public DeleteConcoursePipelineWorker deleteConcoursePipelineWorker(
-        RestOperations concourseRestOperations) {
-        return new DeleteConcoursePipelineWorker(properties, concourseRestOperations);
+        RestOperations concourseOAuth2RestOperations) {
+        return new DeleteConcoursePipelineWorker(properties, concourseOAuth2RestOperations);
     }
 
     @Bean
     public ExposeConcoursePipelineWorker exposeConcoursePipelineWorker(
-        RestOperations concourseRestOperations) {
-        return new ExposeConcoursePipelineWorker(properties, concourseRestOperations);
+        RestOperations concourseOAuth2RestOperations) {
+        return new ExposeConcoursePipelineWorker(properties, concourseOAuth2RestOperations);
     }
 
 }

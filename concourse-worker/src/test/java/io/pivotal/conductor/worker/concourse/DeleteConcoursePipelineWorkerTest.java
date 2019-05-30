@@ -12,8 +12,9 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.web.client.RestTemplate;
 
 class DeleteConcoursePipelineWorkerTest {
 
@@ -26,7 +27,9 @@ class DeleteConcoursePipelineWorkerTest {
     @BeforeEach
     void setUp() {
         properties = new ConcourseProperties();
-        RestTemplate restTemplate = new RestTemplate();
+        ResourceOwnerPasswordResourceDetails resourceDetails = new ResourceOwnerPasswordResourceDetails();
+        OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(resourceDetails);
+        restTemplate.setAccessTokenProvider(new FakeAccessTokenProvider());
         mockServer = MockRestServiceServer.createServer(restTemplate);
 
         worker = new DeleteConcoursePipelineWorker(properties, restTemplate);
@@ -84,4 +87,5 @@ class DeleteConcoursePipelineWorkerTest {
         assertThat(taskResult.getStatus()).isEqualTo(TaskResult.Status.COMPLETED);
         assertThat(taskResult.getOutputData()).containsEntry("wasDeleted", false);
     }
+
 }

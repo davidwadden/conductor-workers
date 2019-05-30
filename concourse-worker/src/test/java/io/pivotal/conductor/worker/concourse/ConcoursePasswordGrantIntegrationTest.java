@@ -17,7 +17,6 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -53,17 +52,12 @@ class ConcoursePasswordGrantIntegrationTest {
     @Autowired
     private OAuth2RestOperations concourseOAuth2RestOperations;
 
-    WireMockServer wireMockServer;
-
-    @BeforeEach
-    void setup() {
-        wireMockServer = new WireMockServer(8888);
-        wireMockServer.start();
-    }
+    @Autowired
+    private WireMockServer wireMockServer;
 
     @AfterEach
     void tearDown() {
-        wireMockServer.stop();
+        wireMockServer.resetAll();
     }
 
     @Test
@@ -125,13 +119,20 @@ class ConcoursePasswordGrantIntegrationTest {
         public ConcourseProperties ConcourseProperties() {
             ConcourseProperties properties = new ConcourseProperties();
 
-            properties.setApiHost("http://localhost:8888");
+            properties.setApiHost(wireMockServer().baseUrl());
             properties.setTeamName("some-team-name");
             properties.setUsername("some-username");
             properties.setPassword("some-password");
             properties.setShouldExposePipeline("false");
 
             return properties;
+        }
+
+        @Bean
+        public WireMockServer wireMockServer() {
+            WireMockServer wireMockServer = new WireMockServer(0);
+            wireMockServer.start();
+            return wireMockServer;
         }
     }
 
