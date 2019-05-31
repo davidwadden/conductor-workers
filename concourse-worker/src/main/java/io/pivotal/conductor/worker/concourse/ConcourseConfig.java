@@ -22,7 +22,7 @@ public class ConcourseConfig {
     public CloudFoundryProperties cloudFoundryProperties() {
         CloudFoundryProperties properties = new CloudFoundryProperties();
         properties.setUsername("some-cf-username");
-        properties.setUsername("some-cf-password");
+        properties.setPassword("some-cf-password");
         return properties;
     }
 
