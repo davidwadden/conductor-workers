@@ -33,6 +33,10 @@ portal:
     password: some-password
     api-url: some-api-url
     account-id: some-account-id
+  template:
+    config:
+      cf-username: fake-cf-username
+      cf-password: fake-cf-password
   tracker:
     api-key: some-tracker-api-key
     account-id: -1

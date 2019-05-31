@@ -9,9 +9,12 @@ import io.pivotal.conductor.worker.app.ConductorConfig.ImportCloudFoundryWorkerC
 import io.pivotal.conductor.worker.app.ConductorConfig.ImportConcourseWorkerConfig.PropertyBindingConcourseProperties;
 import io.pivotal.conductor.worker.app.ConductorConfig.ImportGitHubWorkerConfig.PropertyBindingGitHubProperties;
 import io.pivotal.conductor.worker.app.ConductorConfig.ImportJiraWorkerConfig.PropertyBindingJiraProperties;
+import io.pivotal.conductor.worker.app.ConductorConfig.ImportTemplateWorkerConfig.PropertyBindingTemplateProperties;
 import io.pivotal.conductor.worker.app.ConductorConfig.ImportTrackerWorkerConfig.PropertyBindingTrackerProperties;
 import io.pivotal.conductor.worker.bitbucket.BitbucketProperties;
 import io.pivotal.conductor.worker.bitbucket.BitbucketWorkerConfig;
+import io.pivotal.conductor.worker.template.TemplateProperties;
+import io.pivotal.conductor.worker.template.TemplateWorkerConfig;
 import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryProperties;
 import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryWorkerConfig;
 import io.pivotal.conductor.worker.concourse.ConcourseProperties;
@@ -80,6 +83,15 @@ public class ConductorConfig {
 
         @ConfigurationProperties("portal.jira")
         static class PropertyBindingJiraProperties extends JiraProperties {}
+    }
+
+    @EnableConfigurationProperties(PropertyBindingTemplateProperties.class)
+    @Import(TemplateWorkerConfig.class)
+    @Configuration
+    static class ImportTemplateWorkerConfig {
+
+        @ConfigurationProperties("portal.template")
+        static class PropertyBindingTemplateProperties extends TemplateProperties {}
     }
 
     @EnableConfigurationProperties(PropertyBindingTrackerProperties.class)

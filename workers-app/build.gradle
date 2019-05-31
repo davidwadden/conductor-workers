@@ -8,6 +8,7 @@ dependencies {
     implementation(project(':concourse-worker'))
     implementation(project(':github-worker'))
     implementation(project(':jira-worker'))
+    implementation(project(':template-worker'))
     implementation(project(':tracker-worker'))
     implementation('org.springframework.boot:spring-boot-starter-web')
 
