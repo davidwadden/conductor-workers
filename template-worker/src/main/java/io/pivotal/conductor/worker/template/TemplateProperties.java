@@ -44,7 +44,7 @@ public class TemplateProperties {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-            .append("config", config)
+            .append("templateParams", config)
             .toString();
     }
 }

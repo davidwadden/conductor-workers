@@ -30,22 +30,23 @@ class InterpolateConcoursePipelineWorkerTest {
     @BeforeEach
     void setUp() {
         properties = new TemplateProperties();
-        templateYamlResource = new ClassPathResource("/template.yml");
+        templateYamlResource = new ClassPathResource("/pipeline-template.yml");
         worker = new InterpolateConcoursePipelineWorker(properties, templateYamlResource);
     }
 
     @Test
     void execute() throws IOException {
-        Map<String, Object> config = Map.of(
-            "cf-username", "some-cf-username",
-            "cf-password", "some-cf-password"
+        String gitRepositoryUrl = "https://some-git-server/some-organization/some-repository";
+        Map<String, Object> templateParams = Map.of(
+            "project-name", "Some Project Name!",
+            "git-repository-url", gitRepositoryUrl
         );
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
         Map<String, Object> inputData = Map.of(
             "projectName", "Some Project Name!",
-            "config", config
+            "templateParams", templateParams
         );
         task.setInputData(inputData);
 
@@ -57,9 +58,13 @@ class InterpolateConcoursePipelineWorkerTest {
         JsonNode pipelineYamlNode = objectMapper.readTree(pipelineYaml);
 
         String templateYaml = copyResourceToString(templateYamlResource);
-        ObjectNode templateYamlNode =  (ObjectNode) objectMapper.readTree(templateYaml);
-        templateYamlNode.set("cf-username", TextNode.valueOf("some-cf-username"));
-        templateYamlNode.set("cf-password", TextNode.valueOf("some-cf-password"));
+        ObjectNode templateYamlNode = (ObjectNode) objectMapper.readTree(templateYaml);
+        ObjectNode gitResourceSourceNode = (ObjectNode) templateYamlNode
+            .withArray("resources")
+            .elements()
+            .next()
+            .with("source");
+        gitResourceSourceNode.set("uri", TextNode.valueOf(gitRepositoryUrl));
 
         assertThat(pipelineYaml).containsPattern(Pattern.compile("^## Some Project Name!.*"));
         assertThat(pipelineYamlNode).isEqualTo(templateYamlNode);

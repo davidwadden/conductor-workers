@@ -5,7 +5,7 @@
     "timeoutSeconds": 600,
     "inputKeys": [
       "projectName",
-      "config",
+      "templateParams",
       "dryRun"
     ],
     "outputKeys": [

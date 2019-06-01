@@ -32,15 +32,14 @@ public class InterpolateConcoursePipelineWorker implements Worker {
     @Override
     public TaskResult execute(Task task) {
         String projectName = (String) task.getInputData().get("projectName");
-        Map<String, Object> config = (Map<String, Object>) task.getInputData().get("config");
+        Map<String, Object> templateParams = (Map<String, Object>) task.getInputData().get("templateParams");
 
         List<String> lines;
         try {
             lines = Files.readAllLines(templateYamlResource.getFile().toPath())
                 .stream()
-                .map((line) -> line.replace("{{ project-name }}", projectName))
-                .map((line) -> line.replace("{{ cf-username }}", (String) config.get("cf-username")))
-                .map((line) -> line.replace("{{ cf-password }}", (String) config.get("cf-password")))
+                .map((line) -> line.replace("{{ project-name }}", (String) templateParams.get("project-name")))
+                .map((line) -> line.replace("{{ git-repository-url }}", (String) templateParams.get("git-repository-url")))
                 .collect(Collectors.toList());
         } catch (IOException e) {
             throw new RuntimeException(e);

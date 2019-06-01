@@ -16,7 +16,7 @@ public class TemplateWorkerConfig {
 
     @Bean
     public InterpolateConcoursePipelineWorker interpolateConcoursePipelineWorker(
-        @Value("classpath:/template.yml") Resource templateYamlResource) {
+        @Value("classpath:/pipeline-template.yml") Resource templateYamlResource) {
         return new InterpolateConcoursePipelineWorker(properties, templateYamlResource);
     }
 
