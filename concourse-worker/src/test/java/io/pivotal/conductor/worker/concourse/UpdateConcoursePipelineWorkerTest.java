@@ -17,6 +17,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
@@ -26,7 +27,6 @@ import org.springframework.util.FileCopyUtils;
 class UpdateConcoursePipelineWorkerTest {
 
     private ConcourseProperties properties;
-    private ClassPathResource pipelineYamlResource;
     private MockRestServiceServer mockServer;
     private UpdateConcoursePipelineWorker worker;
 
@@ -37,8 +37,7 @@ class UpdateConcoursePipelineWorkerTest {
         OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(resourceDetails);
         restTemplate.setAccessTokenProvider(new FakeAccessTokenProvider());
         mockServer = MockRestServiceServer.createServer(restTemplate);
-        pipelineYamlResource = new ClassPathResource("/pipeline.yml");
-        worker = new UpdateConcoursePipelineWorker(properties, restTemplate, pipelineYamlResource);
+        worker = new UpdateConcoursePipelineWorker(properties, restTemplate);
     }
 
     @Test
@@ -51,6 +50,7 @@ class UpdateConcoursePipelineWorkerTest {
         String requestUrl =
             String.format("%s/api/v1/teams/%s/pipelines/some-project-name/config",
                 properties.getApiHost(), properties.getTeamName());
+        Resource pipelineYamlResource = new ClassPathResource("/sample-pipeline.yml");
         String pipelineYaml = copyResourceToString(pipelineYamlResource);
 
         mockServer
@@ -62,7 +62,10 @@ class UpdateConcoursePipelineWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = Map.of("projectName", "Some Project Name!");
+        Map<String, Object> inputData = Map.of(
+            "projectName", "Some Project Name!",
+            "pipelineYaml", pipelineYaml
+        );
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
@@ -70,6 +73,11 @@ class UpdateConcoursePipelineWorkerTest {
         mockServer.verify();
 
         assertThat(taskResult.getStatus()).isEqualTo(TaskResult.Status.COMPLETED);
+
+        String pipelineName = ConcoursePipelineUtil.derivePipelineName("Some Project Name!");
+        String pipelineUrl = String.format("%s/teams/%s/pipelines/%s",
+            properties.getApiHost(), properties.getTeamName(), pipelineName);
+        assertThat(taskResult.getOutputData()).containsEntry("pipelineUrl", pipelineUrl);
     }
 
     @Test
@@ -79,10 +87,14 @@ class UpdateConcoursePipelineWorkerTest {
         properties.setUsername("some-username");
         properties.setPassword("some-password");
 
+        Resource pipelineYamlResource = new ClassPathResource("/sample-pipeline.yml");
+        String pipelineYaml = copyResourceToString(pipelineYamlResource);
+
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
         Map<String, Object> inputData = Map.of(
             "projectName", "Some Project Name!",
+            "pipelineYaml", pipelineYaml,
             "dryRun", "true"
         );
         task.setInputData(inputData);
@@ -101,9 +113,9 @@ class UpdateConcoursePipelineWorkerTest {
         assertThat(taskResult.getOutputData()).containsEntry("pipelineUrl", pipelineUrl);
     }
 
-    private String copyResourceToString(ClassPathResource classPathResource) {
+    private String copyResourceToString(Resource resource) {
         String pipelineYaml;
-        try (Reader reader = new InputStreamReader(classPathResource.getInputStream())) {
+        try (Reader reader = new InputStreamReader(resource.getInputStream())) {
             pipelineYaml = FileCopyUtils.copyToString(reader);
         } catch (IOException e) {
             throw new RuntimeException(e);

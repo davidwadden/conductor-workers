@@ -8,5 +8,6 @@ dependencies {
 
     testImplementation('org.springframework:spring-test')
     testImplementation('ch.qos.logback:logback-classic')
+    testImplementation('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml')
     testImplementation('org.hamcrest:hamcrest')
 }

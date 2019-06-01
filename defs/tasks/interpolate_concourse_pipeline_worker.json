@@ -1,0 +1,19 @@
+[
+  {
+    "name": "interpolate_concourse_pipeline_worker",
+    "retryCount": 2,
+    "timeoutSeconds": 600,
+    "inputKeys": [
+      "projectName",
+      "config",
+      "dryRun"
+    ],
+    "outputKeys": [
+      "pipelineYaml"
+    ],
+    "timeoutPolicy": "TIME_OUT_WF",
+    "retryLogic": "FIXED",
+    "retryDelaySeconds": 5,
+    "responseTimeoutSeconds": 60
+  }
+]

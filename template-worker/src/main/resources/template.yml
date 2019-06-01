@@ -1,0 +1,5 @@
+## {{ project-name }}
+---
+
+cf-username: "{{ cf-username }}"
+cf-password: "{{ cf-password }}"
