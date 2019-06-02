@@ -1,0 +1,222 @@
+{
+  "name": "provision_standard_jjb_project",
+  "description": "Provisions a standard JJB project",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "create_jira_project",
+      "taskReferenceName": "create_jira_project",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    },
+    {
+      "name": "create_github_repository",
+      "taskReferenceName": "create_github_repository",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    },
+    {
+      "name": "push_seed_to_git",
+      "taskReferenceName": "push_seed_to_git",
+      "inputParameters": {
+        "repositoryUrl": "${create_github_repository.output.repositoryUrl}",
+        "shouldCreateMySqlDatabase": "${workflow.input.shouldCreateMySqlDatabase}",
+        "shouldCreateRabbitMq": "${workflow.input.shouldCreateRabbitMq}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    },
+    {
+      "name": "fork_join_cloudfoundry_spaces",
+      "taskReferenceName": "fork_join_cloudfoundry_spaces",
+      "type": "FORK_JOIN",
+      "forkTasks": [
+        [
+          {
+            "name": "create_cloud_foundry_space",
+            "taskReferenceName": "create_review_space",
+            "inputParameters": {
+              "projectName": "${workflow.input.projectName}",
+              "spaceNameSuffix": "review"
+            },
+            "type": "SIMPLE",
+            "startDelay": 0
+          }
+        ],
+        [
+          {
+            "name": "create_cloud_foundry_space",
+            "taskReferenceName": "create_production_space",
+            "inputParameters": {
+              "projectName": "${workflow.input.projectName}",
+              "spaceNameSuffix": "production"
+            },
+            "type": "SIMPLE",
+            "startDelay": 0
+          }
+        ]
+      ]
+    },
+    {
+      "name": "join_cloudfoundry_spaces",
+      "taskReferenceName": "join_cloudfoundry_spaces",
+      "type": "JOIN",
+      "joinOn": [
+        "create_review_space",
+        "create_production_space"
+      ]
+    },
+    {
+      "name": "decide_create_mysql_database",
+      "taskReferenceName": "decide_create_mysql_database",
+      "inputParameters": {
+        "should_create_mysql_database": "${workflow.input.shouldCreateMySqlDatabase}"
+      },
+      "type": "DECISION",
+      "caseValueParam": "should_create_mysql_database",
+      "decisionCases": {
+        "true": [
+          {
+            "name": "fork_join_create_mysql_database",
+            "taskReferenceName": "fork_join_create_mysql_database",
+            "type": "FORK_JOIN",
+            "forkTasks": [
+              [
+                {
+                  "name": "create_mysql_database",
+                  "taskReferenceName": "create_review_mysql_database",
+                  "inputParameters": {
+                    "projectName": "${workflow.input.projectName}",
+                    "spaceNameSuffix": "review",
+                    "spaceName": "${create_review_space.output.spaceName}"
+                  },
+                  "type": "SIMPLE",
+                  "startDelay": 0
+                }
+              ],
+              [
+                {
+                  "name": "create_mysql_database",
+                  "taskReferenceName": "create_production_mysql_database",
+                  "inputParameters": {
+                    "projectName": "${workflow.input.projectName}",
+                    "spaceNameSuffix": "production",
+                    "spaceName": "${create_production_space.output.spaceName}"
+                  },
+                  "type": "SIMPLE",
+                  "startDelay": 0
+                }
+              ]
+            ]
+          },
+          {
+            "name": "join_create_mysql_database",
+            "taskReferenceName": "join_create_mysql_database",
+            "type": "JOIN",
+            "joinOn": [
+              "create_review_mysql_database",
+              "create_production_mysql_database"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "decide_create_rabbitmq",
+      "taskReferenceName": "decide_create_rabbitmq",
+      "inputParameters": {
+        "shouldCreateRabbitMq": "${workflow.input.shouldCreateRabbitMq}"
+      },
+      "type": "DECISION",
+      "caseValueParam": "shouldCreateRabbitMq",
+      "decisionCases": {
+        "true": [
+          {
+            "name": "fork_join_create_rabbitmq",
+            "taskReferenceName": "fork_join_create_rabbitmq",
+            "type": "FORK_JOIN",
+            "forkTasks": [
+              [
+                {
+                  "name": "create_rabbitmq",
+                  "taskReferenceName": "create_review_rabbitmq",
+                  "inputParameters": {
+                    "projectName": "${workflow.input.projectName}",
+                    "spaceNameSuffix": "review",
+                    "spaceName": "${create_review_space.output.spaceName}"
+                  },
+                  "type": "SIMPLE",
+                  "startDelay": 0
+                }
+              ],
+              [
+                {
+                  "name": "create_rabbitmq",
+                  "taskReferenceName": "create_production_rabbitmq",
+                  "inputParameters": {
+                    "projectName": "${workflow.input.projectName}",
+                    "spaceNameSuffix": "production",
+                    "spaceName": "${create_production_space.output.spaceName}"
+                  },
+                  "type": "SIMPLE",
+                  "startDelay": 0
+                }
+              ]
+            ]
+          },
+          {
+            "name": "join_create_rabbitmq",
+            "taskReferenceName": "join_create_rabbitmq",
+            "type": "JOIN",
+            "joinOn": [
+              "create_review_rabbitmq",
+              "create_production_rabbitmq"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "commit_concourse_pipeline",
+      "taskReferenceName": "commit_concourse_pipeline",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "repositoryUrl": "${create_github_repository.output.repositoryUrl}",
+        "reviewSpaceName": "${create_review_space.output.spaceName}",
+        "productionSpaceName": "${create_production_space.output.spaceName}",
+        "shouldCreateMySqlDatabase": "${workflow.input.shouldCreateMySqlDatabase}",
+        "shouldCreateRabbitMq": "${workflow.input.shouldCreateRabbitMq}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    },
+    {
+      "name": "set_concourse_pipeline",
+      "taskReferenceName": "set_concourse_pipeline",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "repositoryUrl": "${create_github_repository.output.repositoryUrl}",
+        "sentryDsn": "SOME-VALUE"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    }
+  ],
+  "outputParameters": {
+    "projectUrl": "${create_jira_project.output.projectUrl}",
+    "repositoryUrl": "${create_github_repository.output.repositoryUrl}",
+    "productionAppUrl": "${commit_concourse_pipeline.output.productionAppUrl}",
+    "reviewAppUrl": "${commit_concourse_pipeline.output.reviewAppUrl}",
+    "pipelineUrl": "${set_concourse_pipeline.output.pipelineUrl}",
+    "reviewSpaceUrl": "${create_review_space.output.spaceUrl}",
+    "productionSpaceUrl": "${create_production_space.output.spaceUrl}",
+    "pingdomUrl": "https://www.pingdom.com/"
+  },
+  "schemaVersion": 2
+}

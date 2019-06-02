@@ -1,0 +1,101 @@
+{
+  "name": "deprovision_standard_jjb_project",
+  "description": "Deprovisions a standard JJB project",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "validate_can_deprovision",
+      "taskReferenceName": "validate_can_deprovision",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false
+    },
+    {
+      "name": "delete_jira_project",
+      "taskReferenceName": "delete_jira_project",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": true
+    },
+    {
+      "name": "delete_github_repository",
+      "taskReferenceName": "delete_github_repository",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": true
+    },
+    {
+      "name": "delete_pingdom_check",
+      "taskReferenceName": "delete_review_pingdom_check",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "environmentName": "Review"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": true
+    },
+    {
+      "name": "delete_pingdom_check",
+      "taskReferenceName": "delete_production_pingdom_check",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "environmentName": "Production"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": true
+    },
+    {
+      "name": "delete_cloud_foundry_space",
+      "taskReferenceName": "delete_review_space",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "spaceNameSuffix": "review"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": true
+    },
+    {
+      "name": "delete_cloud_foundry_space",
+      "taskReferenceName": "delete_production_space",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "spaceNameSuffix": "production"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": true
+    },
+    {
+      "name": "delete_concourse_pipeline",
+      "taskReferenceName": "delete_concourse_pipeline",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": true
+    }
+  ],
+  "outputParameters": {
+    "jiraProjectDeleted": "${delete_jira_project.output.wasDeleted}",
+    "githubRepositoryDeleted": "${delete_github_repository.output.wasDeleted}",
+    "cfReviewSpaceDeleted": "${delete_review_space.output.wasDeleted}",
+    "cfProductionSpaceDeleted": "${delete_production_space.output.wasDeleted}",
+    "concoursePipelineDeleted": "${delete_concourse_pipeline.output.wasDeleted}",
+    "pingdomReviewCheckDeleted": "${delete_review_pingdom_check.output.wasDeleted}",
+    "pingdomProductionCheckDeleted": "${delete_production_pingdom_check.output.wasDeleted}"
+  },
+  "schemaVersion": 2
+}
