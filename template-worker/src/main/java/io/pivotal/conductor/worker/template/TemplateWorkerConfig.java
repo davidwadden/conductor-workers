@@ -1,5 +1,6 @@
 package io.pivotal.conductor.worker.template;
 
+import io.pivotal.conductor.lib.template.FreemarkerTemplateProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +17,10 @@ public class TemplateWorkerConfig {
 
     @Bean
     public InterpolateConcoursePipelineWorker interpolateConcoursePipelineWorker(
-        @Value("classpath:/pipeline-template.yml") Resource templateYamlResource) {
-        return new InterpolateConcoursePipelineWorker(properties, templateYamlResource);
+        @Value("classpath:/pipeline.yml.ftl") Resource templateYamlResource,
+        FreemarkerTemplateProcessor freemarkerTemplateProcessor) {
+        return new InterpolateConcoursePipelineWorker(properties, templateYamlResource,
+            freemarkerTemplateProcessor);
     }
 
 }

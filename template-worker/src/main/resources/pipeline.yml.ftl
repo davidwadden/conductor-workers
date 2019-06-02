@@ -1,11 +1,11 @@
-## {{ project-name }}
+## ${projectName}
 ---
 resources:
 
   - name: code-repository
     type: git
     source:
-      uri: "{{ git-repository-url }}"
+      uri: ${gitRepositoryUrl}
       branch: master
 
 jobs:
