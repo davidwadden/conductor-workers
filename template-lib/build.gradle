@@ -1,0 +1,11 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation('org.springframework:spring-core')
+    implementation('org.freemarker:freemarker')
+    implementation('commons-io:commons-io')
+
+    testImplementation('ch.qos.logback:logback-classic')
+}

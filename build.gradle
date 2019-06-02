@@ -32,6 +32,7 @@ subprojects { subproject ->
             dependency("org.cloudfoundry:cloudfoundry-client-reactor:${cloudfoundryClientVersion}")
             dependency("org.cloudfoundry:cloudfoundry-operations:${cloudfoundryClientVersion}")
             dependency("org.eclipse.jgit:org.eclipse.jgit:${jgitVersion}")
+            dependency("commons-io:commons-io:${commonsIoVersion}")
             dependency("com.github.tomakehurst:wiremock-jre8:${wiremockServerVersion}")
             dependency("org.hamcrest:hamcrest:${hamcrestVersion}")
         }
