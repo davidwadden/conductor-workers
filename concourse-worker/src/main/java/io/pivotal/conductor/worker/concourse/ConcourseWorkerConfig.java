@@ -1,6 +1,5 @@
 package io.pivotal.conductor.worker.concourse;
 
-import io.pivotal.conductor.worker.concourse.SetConcoursePipelineWorker.CloudFoundryProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,14 +12,6 @@ public class ConcourseWorkerConfig {
 
     @Autowired
     private ConcourseProperties properties;
-
-    @Bean
-    public SetConcoursePipelineWorker setConcoursePipelineWorker(
-        CloudFoundryProperties cloudFoundryProperties,
-        RestOperations concourseRestOperations) {
-        return new SetConcoursePipelineWorker(properties, cloudFoundryProperties,
-            concourseRestOperations);
-    }
 
     @Bean
     public UpdateConcoursePipelineWorker updateConcoursePipelineWorker(

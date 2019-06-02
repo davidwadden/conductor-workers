@@ -1,6 +1,5 @@
 package io.pivotal.conductor.worker.concourse;
 
-import io.pivotal.conductor.worker.concourse.SetConcoursePipelineWorker.CloudFoundryProperties;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,14 +16,6 @@ public class ConcourseConfig {
 
     @Autowired
     private ConcourseProperties properties;
-
-    @Bean
-    public CloudFoundryProperties cloudFoundryProperties() {
-        CloudFoundryProperties properties = new CloudFoundryProperties();
-        properties.setUsername("some-cf-username");
-        properties.setPassword("some-cf-password");
-        return properties;
-    }
 
     @Deprecated
     @Bean
