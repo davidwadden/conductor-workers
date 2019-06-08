@@ -1,0 +1,21 @@
+{
+  "name": "test_delete",
+  "description": "Delete Test",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "delete_concourse_pipeline",
+      "taskReferenceName": "delete_concourse_pipeline",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": true
+    }
+  ],
+  "outputParameters": {
+    "concoursePipelineDeleted": "${delete_concourse_pipeline.output.wasDeleted}"
+  },
+  "schemaVersion": 2
+}

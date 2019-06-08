@@ -1,0 +1,25 @@
+{
+  "name": "test_events",
+  "description": "Test Eventing things",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "event_task",
+      "taskReferenceName": "event_0",
+      "inputParameters": {
+        "mod": "${workflow.input.mod}"
+      },
+      "type": "EVENT",
+      "sink": "conductor",
+      "asyncComplete": true
+    },
+    {
+      "name": "wait_task",
+      "taskReferenceName": "first_wait_task",
+      "type": "WAIT"
+    }
+  ],
+  "outputParameters": {
+  },
+  "schemaVersion": 2
+}

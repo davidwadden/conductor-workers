@@ -22,17 +22,6 @@
       "startDelay": 0
     },
     {
-      "name": "push_seed_to_git",
-      "taskReferenceName": "push_seed_to_git",
-      "inputParameters": {
-        "repositoryUrl": "${create_github_repository.output.repositoryUrl}",
-        "shouldCreateMySqlDatabase": "${workflow.input.shouldCreateMySqlDatabase}",
-        "shouldCreateRabbitMq": "${workflow.input.shouldCreateRabbitMq}"
-      },
-      "type": "SIMPLE",
-      "startDelay": 0
-    },
-    {
       "name": "fork_join_cloudfoundry_spaces",
       "taskReferenceName": "fork_join_cloudfoundry_spaces",
       "type": "FORK_JOIN",
@@ -181,31 +170,6 @@
           }
         ]
       }
-    },
-    {
-      "name": "commit_concourse_pipeline",
-      "taskReferenceName": "commit_concourse_pipeline",
-      "inputParameters": {
-        "projectName": "${workflow.input.projectName}",
-        "repositoryUrl": "${create_github_repository.output.repositoryUrl}",
-        "reviewSpaceName": "${create_review_space.output.spaceName}",
-        "productionSpaceName": "${create_production_space.output.spaceName}",
-        "shouldCreateMySqlDatabase": "${workflow.input.shouldCreateMySqlDatabase}",
-        "shouldCreateRabbitMq": "${workflow.input.shouldCreateRabbitMq}"
-      },
-      "type": "SIMPLE",
-      "startDelay": 0
-    },
-    {
-      "name": "set_concourse_pipeline",
-      "taskReferenceName": "set_concourse_pipeline",
-      "inputParameters": {
-        "projectName": "${workflow.input.projectName}",
-        "repositoryUrl": "${create_github_repository.output.repositoryUrl}",
-        "sentryDsn": "SOME-VALUE"
-      },
-      "type": "SIMPLE",
-      "startDelay": 0
     }
   ],
   "outputParameters": {
