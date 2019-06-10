@@ -15,28 +15,48 @@
       "optional": true
     },
     {
-      "name": "delete_cloud_foundry_space",
-      "taskReferenceName": "delete_review_cloud_foundry_space",
-      "inputParameters": {
-        "projectName": "${workflow.input.projectName}",
-        "spaceNameSuffix": "review",
-        "dryRun": "${workflow.input.dryRun}"
-      },
-      "type": "SIMPLE",
-      "startDelay": 0,
-      "optional": true
+      "name": "fork_join_cloudfoundry_spaces",
+      "taskReferenceName": "fork_join_cloudfoundry_spaces",
+      "type": "FORK_JOIN",
+      "forkTasks": [
+        [
+          {
+            "name": "delete_cloud_foundry_space",
+            "taskReferenceName": "delete_review_cloud_foundry_space",
+            "inputParameters": {
+              "projectName": "${workflow.input.projectName}",
+              "spaceNameSuffix": "review",
+              "dryRun": "${workflow.input.dryRun}"
+            },
+            "type": "SIMPLE",
+            "startDelay": 0,
+            "optional": true
+          }
+        ],
+        [
+          {
+            "name": "delete_cloud_foundry_space",
+            "taskReferenceName": "delete_production_cloud_foundry_space",
+            "inputParameters": {
+              "projectName": "${workflow.input.projectName}",
+              "spaceNameSuffix": "production",
+              "dryRun": "${workflow.input.dryRun}"
+            },
+            "type": "SIMPLE",
+            "startDelay": 0,
+            "optional": true
+          }
+        ]
+      ]
     },
     {
-      "name": "delete_cloud_foundry_space",
-      "taskReferenceName": "delete_production_cloud_foundry_space",
-      "inputParameters": {
-        "projectName": "${workflow.input.projectName}",
-        "spaceNameSuffix": "production",
-        "dryRun": "${workflow.input.dryRun}"
-      },
-      "type": "SIMPLE",
-      "startDelay": 0,
-      "optional": true
+      "name": "join_cloudfoundry_spaces",
+      "taskReferenceName": "join_cloudfoundry_spaces",
+      "type": "JOIN",
+      "joinOn": [
+        "delete_review_cloud_foundry_space",
+        "delete_production_cloud_foundry_space"
+      ]
     }
   ],
   "outputParameters": {
