@@ -1,0 +1,21 @@
+{
+  "name": "provision_standard_project",
+  "description": "Provisions a standard project",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "create_jira_project",
+      "taskReferenceName": "create_jira_project",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "dryRun": "true"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    }
+  ],
+  "outputParameters": {
+    "jiraProjectUrl": "${create_jira_project.output.projectUrl}"
+  },
+  "schemaVersion": 2
+}
