@@ -10,5 +10,8 @@ dependencies {
     implementation('io.projectreactor:reactor-core')
     implementation('io.projectreactor.ipc:reactor-netty')
 
+    runtime('org.glassfish.jaxb:jaxb-runtime')
+    runtime('javax.activation:activation')
+
     testImplementation('ch.qos.logback:logback-classic')
 }
