@@ -7,7 +7,32 @@
       "name": "delete_jira_project",
       "taskReferenceName": "delete_jira_project",
       "inputParameters": {
-        "projectName": "${workflow.input.projectName}"
+        "projectName": "${workflow.input.projectName}",
+        "dryRun": "true"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": true
+    },
+    {
+      "name": "delete_cloud_foundry_space",
+      "taskReferenceName": "delete_review_cloud_foundry_space",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "spaceNameSuffix": "review",
+        "dryRun": "${workflow.input.dryRun}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": true
+    },
+    {
+      "name": "delete_cloud_foundry_space",
+      "taskReferenceName": "delete_production_cloud_foundry_space",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "spaceNameSuffix": "production",
+        "dryRun": "${workflow.input.dryRun}"
       },
       "type": "SIMPLE",
       "startDelay": 0,
@@ -15,7 +40,9 @@
     }
   ],
   "outputParameters": {
-    "jiraProjectDeleted": "${delete_jira_project.output.wasDeleted}"
+    "jiraProjectDeleted": "${delete_jira_project.output.wasDeleted}",
+    "reviewCloudFoundrySpaceDeleted": "${delete_review_cloud_foundry_space.output.wasDeleted}",
+    "productionCloudFoundrySpaceDeleted": "${delete_production_cloud_foundry_space.output.wasDeleted}"
   },
   "schemaVersion": 2
 }

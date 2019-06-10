@@ -12,10 +12,34 @@
       },
       "type": "SIMPLE",
       "startDelay": 0
+    },
+    {
+      "name": "create_cloud_foundry_space",
+      "taskReferenceName": "create_review_cloud_foundry_space",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "spaceNameSuffix": "review",
+        "dryRun": "${workflow.input.dryRun}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    },
+    {
+      "name": "create_cloud_foundry_space",
+      "taskReferenceName": "create_production_cloud_foundry_space",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "spaceNameSuffix": "production",
+        "dryRun": "${workflow.input.dryRun}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
     }
   ],
   "outputParameters": {
-    "jiraProjectUrl": "${create_jira_project.output.projectUrl}"
+    "jiraProjectUrl": "${create_jira_project.output.projectUrl}",
+    "reviewCloudFoundrySpaceUrl": "${create_review_cloud_foundry_space.output.spaceUrl}",
+    "productionCloudFoundrySpaceUrl": "${create_production_cloud_foundry_space.output.spaceUrl}"
   },
   "schemaVersion": 2
 }
