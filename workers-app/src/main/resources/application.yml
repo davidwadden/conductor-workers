@@ -56,3 +56,15 @@ portal:
 logging:
   level:
     cloudfoundry-client: debug
+
+---
+spring:
+  profiles: docker
+
+portal:
+  concourse:
+    api-host: http://localhost:8200
+    team-name: main
+    username: test
+    password: test
+    should-expose-pipeline: true
