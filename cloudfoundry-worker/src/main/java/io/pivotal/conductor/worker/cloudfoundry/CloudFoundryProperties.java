@@ -12,7 +12,7 @@ public class CloudFoundryProperties {
     private String username;
     private String password;
     private String domain;
-    private String logDrainUrl;
+    private Boolean skipSslValidation;
 
     public String getApiHost() {
         return apiHost;
@@ -62,12 +62,12 @@ public class CloudFoundryProperties {
         this.domain = domain;
     }
 
-    public String getLogDrainUrl() {
-        return logDrainUrl;
+    public Boolean getSkipSslValidation() {
+        return skipSslValidation;
     }
 
-    public void setLogDrainUrl(String logDrainUrl) {
-        this.logDrainUrl = logDrainUrl;
+    public void setSkipSslValidation(Boolean skipSslValidation) {
+        this.skipSslValidation = skipSslValidation;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class CloudFoundryProperties {
             .append(username, that.username)
             .append(password, that.password)
             .append(domain, that.domain)
-            .append(logDrainUrl, that.logDrainUrl)
+            .append(skipSslValidation, that.skipSslValidation)
             .isEquals();
     }
 
@@ -102,7 +102,7 @@ public class CloudFoundryProperties {
             .append(username)
             .append(password)
             .append(domain)
-            .append(logDrainUrl)
+            .append(skipSslValidation)
             .toHashCode();
     }
 
@@ -115,7 +115,7 @@ public class CloudFoundryProperties {
             .append("username", username)
             .append("password", password)
             .append("domain", domain)
-            .append("logDrainUrl", logDrainUrl)
+            .append("skipSslValidation", skipSslValidation)
             .toString();
     }
 }

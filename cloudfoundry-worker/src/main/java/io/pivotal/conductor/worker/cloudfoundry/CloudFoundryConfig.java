@@ -44,6 +44,7 @@ public class CloudFoundryConfig {
     public ConnectionContext connectionContext() {
         return DefaultConnectionContext.builder()
             .apiHost(properties.getApiHost())
+            .skipSslValidation(properties.getSkipSslValidation())
             .build();
     }
 
