@@ -79,6 +79,26 @@
       },
       "type": "SIMPLE",
       "startDelay": 0
+    },
+    {
+      "name": "unpause_concourse_pipeline",
+      "taskReferenceName": "unpause_concourse_pipeline",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "dryRun": "${workflow.input.dryRun}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    },
+    {
+      "name": "expose_concourse_pipeline",
+      "taskReferenceName": "expose_concourse_pipeline",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "dryRun": "${workflow.input.dryRun}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
     }
   ],
   "outputParameters": {
