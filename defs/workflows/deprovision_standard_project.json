@@ -57,12 +57,23 @@
         "delete_review_cloud_foundry_space",
         "delete_production_cloud_foundry_space"
       ]
+    },
+    {
+      "name": "delete_concourse_pipeline",
+      "taskReferenceName": "delete_concourse_pipeline",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "dryRun": "${workflow.input.dryRun}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
     }
   ],
   "outputParameters": {
     "jiraProjectDeleted": "${delete_jira_project.output.wasDeleted}",
     "reviewCloudFoundrySpaceDeleted": "${delete_review_cloud_foundry_space.output.wasDeleted}",
-    "productionCloudFoundrySpaceDeleted": "${delete_production_cloud_foundry_space.output.wasDeleted}"
+    "productionCloudFoundrySpaceDeleted": "${delete_production_cloud_foundry_space.output.wasDeleted}",
+    "concoursePipelineDeleted": "${delete_concourse_pipeline.output.wasDeleted}"
   },
   "schemaVersion": 2
 }

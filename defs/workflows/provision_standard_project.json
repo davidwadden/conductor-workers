@@ -68,13 +68,25 @@
       },
       "type": "SIMPLE",
       "startDelay": 0
+    },
+    {
+      "name": "update_concourse_pipeline",
+      "taskReferenceName": "update_concourse_pipeline",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "pipelineYaml": "${interpolate_concourse_pipeline.output.pipelineYaml}",
+        "dryRun": "${workflow.input.dryRun}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
     }
   ],
   "outputParameters": {
     "jiraProjectUrl": "${create_jira_project.output.projectUrl}",
     "reviewCloudFoundrySpaceUrl": "${create_review_cloud_foundry_space.output.spaceUrl}",
     "productionCloudFoundrySpaceUrl": "${create_production_cloud_foundry_space.output.spaceUrl}",
-    "pipelineYaml": "${interpolate_concourse_pipeline.output.pipelineYaml}"
+    "pipelineYaml": "${interpolate_concourse_pipeline.output.pipelineYaml}",
+    "concoursePipelineUrl": "${update_concourse_pipeline.output.pipelineUrl}"
   },
   "schemaVersion": 2
 }
