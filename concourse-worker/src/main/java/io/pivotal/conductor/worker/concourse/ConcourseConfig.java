@@ -8,20 +8,12 @@ import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
-import org.springframework.web.client.RestOperations;
-import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class ConcourseConfig {
 
     @Autowired
     private ConcourseProperties properties;
-
-    @Deprecated
-    @Bean
-    public RestOperations concourseRestOperations() {
-        return new RestTemplate();
-    }
 
     @Bean
     public OAuth2RestOperations concourseOAuth2RestOperations() {
