@@ -16,7 +16,7 @@ import org.springframework.core.io.Resource;
 
 public class InterpolateConcoursePipelineWorker implements Worker {
 
-    static final String TASK_DEF_NAME = "interpolate_concourse_pipeline_worker";
+    static final String TASK_DEF_NAME = "interpolate_concourse_pipeline";
 
     private final TemplateProperties properties;
     private final Resource templateYamlResource;

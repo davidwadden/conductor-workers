@@ -54,12 +54,27 @@
         "create_review_cloud_foundry_space",
         "create_production_cloud_foundry_space"
       ]
+    },
+    {
+      "name": "interpolate_concourse_pipeline",
+      "taskReferenceName": "interpolate_concourse_pipeline",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "templateParams": {
+          "projectName": "${workflow.input.projectName}",
+          "gitRepositoryUrl": "https://github.com/cloudfoundry-samples/spring-music"
+        },
+        "dryRun": "${workflow.input.dryRun}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
     }
   ],
   "outputParameters": {
     "jiraProjectUrl": "${create_jira_project.output.projectUrl}",
     "reviewCloudFoundrySpaceUrl": "${create_review_cloud_foundry_space.output.spaceUrl}",
-    "productionCloudFoundrySpaceUrl": "${create_production_cloud_foundry_space.output.spaceUrl}"
+    "productionCloudFoundrySpaceUrl": "${create_production_cloud_foundry_space.output.spaceUrl}",
+    "pipelineYaml": "${interpolate_concourse_pipeline.output.pipelineYaml}"
   },
   "schemaVersion": 2
 }

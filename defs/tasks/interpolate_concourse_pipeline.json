@@ -1,6 +1,6 @@
 [
   {
-    "name": "interpolate_concourse_pipeline_worker",
+    "name": "interpolate_concourse_pipeline",
     "retryCount": 2,
     "timeoutSeconds": 600,
     "inputKeys": [
