@@ -59,7 +59,7 @@ public class DeleteJiraProjectWorker implements Worker {
                 .filter(result -> projectName.equals(result.getProjectName()))
                 .findAny();
 
-            if (searchResult.isEmpty()) {
+            if (!searchResult.isPresent()) {
                 TaskResult taskResult = new TaskResult(task);
                 taskResult.setStatus(Status.COMPLETED);
                 taskResult.getOutputData().put("wasDeleted", wasDeleted);

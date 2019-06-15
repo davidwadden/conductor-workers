@@ -26,7 +26,7 @@ public class CloudFoundryRouteClient {
     public void createRoute(String spaceName, String hostname, String domainName) {
         Optional<String> spaceId = lookupSpaceId(spaceName);
         Optional<String> domainId = lookupDomainId(domainName);
-        if (spaceId.isEmpty() || domainId.isEmpty()) {
+        if (!spaceId.isPresent() || !domainId.isPresent()) {
             return;
         }
 

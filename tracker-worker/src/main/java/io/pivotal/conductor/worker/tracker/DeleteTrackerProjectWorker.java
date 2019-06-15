@@ -65,7 +65,7 @@ public class DeleteTrackerProjectWorker implements Worker {
                 .filter(p -> projectName.equals(p.getProjectName()))
                 .findAny();
 
-            if (project.isEmpty()) {
+            if (!project.isPresent()) {
                 TaskResult taskResult = new TaskResult(task);
                 taskResult.setStatus(Status.COMPLETED);
                 taskResult.getOutputData().put("wasDeleted", false);

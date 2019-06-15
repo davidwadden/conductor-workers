@@ -7,6 +7,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withNoContent;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
+import com.google.common.collect.ImmutableMap;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import java.io.IOException;
@@ -68,7 +69,7 @@ class DeleteTrackerProjectWorkerTest {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
 
-        Map<String, Object> inputData = Map.of("projectName", "Some Project Name");
+        Map<String, Object> inputData = ImmutableMap.of("projectName", "Some Project Name");
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
@@ -96,7 +97,7 @@ class DeleteTrackerProjectWorkerTest {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
 
-        Map<String, Object> inputData = Map.of("projectName", "Project That Does Not Exist");
+        Map<String, Object> inputData = ImmutableMap.of("projectName", "Project That Does Not Exist");
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
@@ -115,7 +116,7 @@ class DeleteTrackerProjectWorkerTest {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
 
-        Map<String, Object> inputData = Map.of(
+        Map<String, Object> inputData = ImmutableMap.of(
             "projectName", "Some Project Name",
             "dryRun", "true"
         );

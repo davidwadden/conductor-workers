@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
+import com.google.common.collect.ImmutableMap;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import java.util.Map;
@@ -29,7 +30,7 @@ class CreateMysqlDatabaseServiceWorkerTest {
     void execute() {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = Map.of(
+        Map<String, Object> inputData = ImmutableMap.of(
             "projectName", "Some Project Name!",
             "spaceNameSuffix", "some-suffix",
             "spaceName", "some-space-name"
@@ -50,7 +51,7 @@ class CreateMysqlDatabaseServiceWorkerTest {
     void dryRun() {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = Map.of(
+        Map<String, Object> inputData = ImmutableMap.of(
             "projectName", "Some Project Name!",
             "spaceNameSuffix", "some-suffix",
             "spaceName", "some-space-name",

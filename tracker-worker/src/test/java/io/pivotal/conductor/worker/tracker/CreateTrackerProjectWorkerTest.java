@@ -7,6 +7,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import io.pivotal.conductor.worker.tracker.CreateTrackerProjectWorker.CreateTrackerProjectRequestDto;
@@ -72,7 +73,7 @@ class CreateTrackerProjectWorkerTest {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
 
-        Map<String, Object> inputData = Map.of(
+        Map<String, Object> inputData = ImmutableMap.of(
             "projectName", "Some Project Name",
             "stories", Collections.emptyMap()
         );
@@ -95,7 +96,7 @@ class CreateTrackerProjectWorkerTest {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
 
-        Map<String, Object> inputData = Map.of(
+        Map<String, Object> inputData = ImmutableMap.of(
             "projectName", "Some Project Name",
             "stories", Collections.emptyMap(),
             "dryRun", "true"

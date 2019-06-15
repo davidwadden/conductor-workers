@@ -6,6 +6,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
+import com.google.common.collect.ImmutableMap;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import java.util.Map;
@@ -56,7 +57,7 @@ class CreateBitbucketRepositoryWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = Map.of(
+        Map<String, Object> inputData = ImmutableMap.of(
             "projectName", "Some Project Name!",
             "projectKey", "PROJECT-KEY"
         );
@@ -79,7 +80,7 @@ class CreateBitbucketRepositoryWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = Map.of(
+        Map<String, Object> inputData = ImmutableMap.of(
             "projectName", "Some Project Name!",
             "projectKey", "PROJECT-KEY",
             "dryRun", "true"

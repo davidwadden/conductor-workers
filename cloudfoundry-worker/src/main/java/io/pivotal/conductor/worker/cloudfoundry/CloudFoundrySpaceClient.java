@@ -33,7 +33,7 @@ public class CloudFoundrySpaceClient {
 
     public Boolean deleteSpace(String spaceName) {
         Optional<String> spaceId = lookupSpaceId(spaceName);
-        if (spaceId.isEmpty()) {
+        if (!spaceId.isPresent()) {
             return false;
         }
         DeleteSpaceRequest request = DeleteSpaceRequest.builder()

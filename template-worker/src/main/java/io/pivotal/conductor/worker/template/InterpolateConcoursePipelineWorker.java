@@ -48,7 +48,7 @@ public class InterpolateConcoursePipelineWorker implements Worker {
 
             freemarkerTemplateProcessor.process(inputStream, outputStream, templateParams);
 
-            pipelineYaml = outputStream.toString(Charset.defaultCharset());
+            pipelineYaml = outputStream.toString(Charset.defaultCharset().name());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

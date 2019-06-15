@@ -12,6 +12,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.BasicCredentials;
+import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -65,7 +66,7 @@ class ConcoursePasswordGrantIntegrationTest {
         logger.info("Setting base URL: {}", wireMockServer.baseUrl());
         properties.setApiHost(wireMockServer.baseUrl());
 
-        Map<String, Object> responseDto = Map.of(
+        Map<String, Object> responseDto = ImmutableMap.of(
             "access_token", "some-access-token",
             "token_type", "Bearer",
             "expiry", "2019-05-29T00:11:26Z"
@@ -90,7 +91,7 @@ class ConcoursePasswordGrantIntegrationTest {
 
         concourseOAuth2RestOperations.exchange(requestEntity, Void.class);
 
-        MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>() {{
+        MultiValueMap<String, Object> formData = new LinkedMultiValueMap<String, Object>() {{
             add("grant_type", "password");
             add("username", "some-username");
             add("password", "some-password");

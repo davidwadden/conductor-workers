@@ -1,5 +1,6 @@
 package io.pivotal.conductor.worker.concourse;
 
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +29,7 @@ public class ConcourseConfig {
         resourceDetails.setPassword(properties.getPassword());
         resourceDetails.setClientId("fly");
         resourceDetails.setClientSecret("Zmx5");
-        resourceDetails.setScope(List.of("openid", "profile", "email", "federated:id", "groups"));
+        resourceDetails.setScope(ImmutableList.of("openid", "profile", "email", "federated:id", "groups"));
         return resourceDetails;
     }
 }

@@ -57,7 +57,7 @@ public class DeleteBitbucketProjectWorker implements Worker {
                 .map(ProjectSearchResultDto::getProjectKey)
                 .findAny();
 
-            if (projectKey.isEmpty()) {
+            if (!projectKey.isPresent()) {
                 TaskResult taskResult = new TaskResult(task);
                 taskResult.setStatus(Status.COMPLETED);
                 taskResult.getOutputData().put("wasDeleted", wasDeleted);

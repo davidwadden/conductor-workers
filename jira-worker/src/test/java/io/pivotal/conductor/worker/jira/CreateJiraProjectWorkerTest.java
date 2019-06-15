@@ -10,6 +10,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import java.util.Map;
@@ -56,7 +57,7 @@ class CreateJiraProjectWorkerTest {
         properties.setPassword("some-password");
         properties.setAccountId("some-account-id");
 
-        Map<String, Object> requestDto = Map.of(
+        Map<String, Object> requestDto = ImmutableMap.of(
             "key", "PROJECT-KEY",
             "name", "Some Project Name!",
             "projectTypeKey", "software",
@@ -74,7 +75,7 @@ class CreateJiraProjectWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = Map.of("projectName", "Some Project Name!");
+        Map<String, Object> inputData = ImmutableMap.of("projectName", "Some Project Name!");
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
@@ -99,7 +100,7 @@ class CreateJiraProjectWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = Map.of(
+        Map<String, Object> inputData = ImmutableMap.of(
             "projectName", "Some Project Name!",
             "dryRun", "true"
         );

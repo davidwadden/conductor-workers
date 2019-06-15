@@ -48,7 +48,7 @@ class FreemarkerTemplateProcessorTest {
 
         freemarkerTemplateProcessor.process(inputStream, outputStream, dataModel);
 
-        String processedText = outputStream.toString(Charset.defaultCharset());
+        String processedText = outputStream.toString(Charset.defaultCharset().name());
 
         assertThat(processedText)
             .contains("Shared file contents")
@@ -69,7 +69,7 @@ class FreemarkerTemplateProcessorTest {
 
         freemarkerTemplateProcessor.process(inputStream, outputStream, dataModel);
 
-        String processedText = outputStream.toString(Charset.defaultCharset());
+        String processedText = outputStream.toString(Charset.defaultCharset().name());
 
         assertThat(processedText)
             .contains("Shared file contents")

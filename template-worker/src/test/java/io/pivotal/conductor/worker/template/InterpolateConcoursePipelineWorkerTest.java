@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.google.common.collect.ImmutableMap;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import io.pivotal.conductor.lib.template.FreemarkerTemplateProcessor;
@@ -57,7 +58,7 @@ class InterpolateConcoursePipelineWorkerTest {
     void execute() throws IOException {
 
         String gitRepositoryUrl = "https://some-git-server/some-organization/some-repository";
-        Map<String, Object> templateParams = Map.of(
+        Map<String, Object> templateParams = ImmutableMap.of(
             "projectName", "Some Project Name!",
             "gitRepositoryUrl", gitRepositoryUrl
         );
@@ -81,7 +82,7 @@ class InterpolateConcoursePipelineWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = Map.of(
+        Map<String, Object> inputData = ImmutableMap.of(
             "projectName", "Some Project Name!",
             "templateParams", templateParams
         );

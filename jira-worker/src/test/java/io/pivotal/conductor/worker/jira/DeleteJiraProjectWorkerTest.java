@@ -6,6 +6,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
+import com.google.common.collect.ImmutableMap;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import java.util.Map;
@@ -79,7 +80,7 @@ class DeleteJiraProjectWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = Map.of("projectName", "Some Project Name!");
+        Map<String, Object> inputData = ImmutableMap.of("projectName", "Some Project Name!");
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
@@ -106,7 +107,7 @@ class DeleteJiraProjectWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = Map.of("projectName", "Some Project Name!");
+        Map<String, Object> inputData = ImmutableMap.of("projectName", "Some Project Name!");
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
@@ -126,7 +127,7 @@ class DeleteJiraProjectWorkerTest {
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = Map.of(
+        Map<String, Object> inputData = ImmutableMap.of(
             "projectName", "Some Project Name!",
             "dryRun", "true"
         );
