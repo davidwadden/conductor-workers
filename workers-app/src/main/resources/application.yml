@@ -11,13 +11,15 @@ portal:
     password: some-bitbucket-password
     team-name: some-bitbucket-team-name
   cloudfoundry:
-    api-host: api.run.pivotal.io
-    apps-manager-host: console.run.pivotal.io
-    organization: some-cloudfoundry-organization
-    username: some-cloudfoundry-username
-    password: some-cloudfoundry-password
-    domain: some-cloudfoundry-domain
-    skip-ssl-validation: false
+    foundations:
+      default:
+        api-host: api.run.pivotal.io
+        apps-manager-host: console.run.pivotal.io
+        organization: some-cloudfoundry-organization
+        username: some-cloudfoundry-username
+        password: some-cloudfoundry-password
+        domain: some-cloudfoundry-domain
+        skip-ssl-validation: false
   concourse:
     api-host: https://ci.some-domain
     team-name: some-concourse-team-name
@@ -46,13 +48,15 @@ spring:
 
 portal:
   cloudfoundry:
-    api-host: api.dev.cfdev.sh
-    apps-manager-host: apps.dev.cfdev.sh
-    organization: cfdev-org
-    username: user
-    password: pass
-    domain: dev.cfdev.sh
-    skip-ssl-validation: true
+    foundations:
+      default:
+        api-host: api.dev.cfdev.sh
+        apps-manager-host: apps.dev.cfdev.sh
+        organization: cfdev-org
+        username: user
+        password: pass
+        domain: dev.cfdev.sh
+        skip-ssl-validation: true
 logging:
   level:
     cloudfoundry-client: debug

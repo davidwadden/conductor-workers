@@ -4,6 +4,7 @@ import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.metadata.tasks.TaskResult.Status;
+import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryProperties.CloudFoundryFoundationProperties;
 
 public class CreateCloudFoundryRouteWorker implements Worker {
 
@@ -33,7 +34,9 @@ public class CreateCloudFoundryRouteWorker implements Worker {
         String hostname = CloudFoundryUtil.deriveRouteHostname(projectName, hostnameSuffix);
 
         if (!dryRun) {
-            cloudFoundryRouteClient.createRoute(spaceName, hostname, properties.getDomain());
+            CloudFoundryFoundationProperties defaultFoundationProperties =
+                properties.getFoundations().get(CloudFoundryConfig.DEFAULT_FOUNDATION_NAME);
+            cloudFoundryRouteClient.createRoute(spaceName, hostname, defaultFoundationProperties.getDomain());
         }
 
         TaskResult taskResult = new TaskResult(task);

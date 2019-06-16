@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import com.google.common.collect.ImmutableMap;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
+import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryProperties.CloudFoundryFoundationProperties;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,9 @@ class CreateCloudFoundryRouteWorkerTest {
 
     @Test
     void execute() {
-        properties.setDomain("some-domain");
+        CloudFoundryFoundationProperties foundationProperties = new CloudFoundryFoundationProperties();
+        foundationProperties.setDomain("some-domain");
+        properties.getFoundations().put("default", foundationProperties);
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
@@ -53,7 +56,11 @@ class CreateCloudFoundryRouteWorkerTest {
 
     @Test
     void dryRun() {
-        properties.setDomain("some-domain");
+        CloudFoundryFoundationProperties defaultFoundationProperties =
+            new CloudFoundryFoundationProperties();
+        defaultFoundationProperties.setDomain("some-domain");
+        properties.getFoundations()
+            .put(CloudFoundryConfig.DEFAULT_FOUNDATION_NAME, defaultFoundationProperties);
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);

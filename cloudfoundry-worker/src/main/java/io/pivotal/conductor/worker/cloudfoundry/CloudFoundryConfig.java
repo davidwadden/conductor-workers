@@ -1,5 +1,6 @@
 package io.pivotal.conductor.worker.cloudfoundry;
 
+import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryProperties.CloudFoundryFoundationProperties;
 import org.cloudfoundry.client.CloudFoundryClient;
 import org.cloudfoundry.doppler.DopplerClient;
 import org.cloudfoundry.operations.CloudFoundryOperations;
@@ -19,18 +20,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CloudFoundryConfig {
 
+    public static final String DEFAULT_FOUNDATION_NAME = "default";
+
     @Autowired
     private CloudFoundryProperties properties;
 
     @Bean
     public CloudFoundrySpaceClient cloudFoundrySpaceClient() {
-        return new CloudFoundrySpaceClient(cloudFoundryOperations(),
+        return new CloudFoundrySpaceClient(defaultOrganizationCloudFoundryOperations(),
             cloudFoundryClient());
     }
 
     @Bean
     public CloudFoundryRouteClient cloudFoundryRouteClient() {
-        return new CloudFoundryRouteClient(properties, cloudFoundryOperations(),
+        return new CloudFoundryRouteClient(properties, defaultOrganizationCloudFoundryOperations(),
             cloudFoundryClient());
     }
 
@@ -42,17 +45,21 @@ public class CloudFoundryConfig {
 
     @Bean
     public ConnectionContext connectionContext() {
+        CloudFoundryFoundationProperties defaultFoundationProperties =
+            properties.getFoundations().get(DEFAULT_FOUNDATION_NAME);
         return DefaultConnectionContext.builder()
-            .apiHost(properties.getApiHost())
-            .skipSslValidation(properties.getSkipSslValidation())
+            .apiHost(defaultFoundationProperties.getApiHost())
+            .skipSslValidation(defaultFoundationProperties.getSkipSslValidation())
             .build();
     }
 
     @Bean
     public TokenProvider tokenProvider() {
+        CloudFoundryFoundationProperties defaultFoundationProperties =
+            properties.getFoundations().get(DEFAULT_FOUNDATION_NAME);
         return PasswordGrantTokenProvider.builder()
-            .password(properties.getPassword())
-            .username(properties.getUsername())
+            .password(defaultFoundationProperties.getPassword())
+            .username(defaultFoundationProperties.getUsername())
             .build();
     }
 
@@ -81,22 +88,25 @@ public class CloudFoundryConfig {
     }
 
     @Bean
-    public DefaultCloudFoundryOperations.Builder defaultCloudFoundryOperationsBuilder() {
+    public DefaultCloudFoundryOperations.Builder defaultOrganizationCloudFoundryOperationsBuilder() {
+        CloudFoundryFoundationProperties defaultFoundationProperties =
+            properties.getFoundations().get(DEFAULT_FOUNDATION_NAME);
         return DefaultCloudFoundryOperations.builder()
             .cloudFoundryClient(cloudFoundryClient())
             .dopplerClient(dopplerClient())
             .uaaClient(uaaClient())
-            .organization(properties.getOrganization());
+            .organization(defaultFoundationProperties.getOrganization());
     }
 
     @Bean
-    public CloudFoundryOperations cloudFoundryOperations() {
-        return defaultCloudFoundryOperationsBuilder().build();
+    public CloudFoundryOperations defaultOrganizationCloudFoundryOperations() {
+        return defaultOrganizationCloudFoundryOperationsBuilder().build();
     }
 
     @Bean
     public SpaceScopedCloudFoundryOperationsFactory spaceScopedCloudFoundryOperationsFactory() {
-        return new SpaceScopedCloudFoundryOperationsFactory(defaultCloudFoundryOperationsBuilder());
+        return new SpaceScopedCloudFoundryOperationsFactory(
+            defaultOrganizationCloudFoundryOperationsBuilder());
     }
 
     public static class SpaceScopedCloudFoundryOperationsFactory {
