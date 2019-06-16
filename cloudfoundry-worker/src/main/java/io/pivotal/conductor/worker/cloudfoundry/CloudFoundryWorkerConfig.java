@@ -1,5 +1,6 @@
 package io.pivotal.conductor.worker.cloudfoundry;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -7,6 +8,14 @@ import org.springframework.context.annotation.Import;
 @Import(CloudFoundryConfig.class)
 @Configuration
 public class CloudFoundryWorkerConfig {
+
+    @Autowired
+    private CloudFoundryProperties properties;
+
+    @Bean
+    public DeriveCloudFoundryResourceNameWorker deriveCloudFoundryResourceNameWorker() {
+        return new DeriveCloudFoundryResourceNameWorker();
+    }
 
     @Bean
     public CreateCloudFoundrySpaceWorker createCloudFoundrySpaceWorker(

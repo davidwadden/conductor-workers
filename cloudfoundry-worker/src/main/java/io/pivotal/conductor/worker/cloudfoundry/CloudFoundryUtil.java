@@ -4,6 +4,10 @@ class CloudFoundryUtil {
 
     private CloudFoundryUtil() {}
 
+    static String deriveResourceName(String projectName) {
+        return sanitizeProjectName(projectName);
+    }
+
     static String deriveSpaceName(String projectName, String spaceNameSuffix) {
         String baseSpaceName = sanitizeProjectName(projectName);
         return String.format("%s-%s", baseSpaceName, spaceNameSuffix);

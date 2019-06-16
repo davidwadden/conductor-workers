@@ -15,6 +15,16 @@
       "optional": true
     },
     {
+      "name": "derive_cloud_foundry_resource_name",
+      "taskReferenceName": "derive_cloud_foundry_resource_name",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "dryRun": "${workflow.input.dryRun}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    },
+    {
       "name": "fork_join_cloudfoundry_spaces",
       "taskReferenceName": "fork_join_cloudfoundry_spaces",
       "type": "FORK_JOIN",
