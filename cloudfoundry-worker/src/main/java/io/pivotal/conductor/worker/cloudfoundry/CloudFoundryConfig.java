@@ -1,6 +1,10 @@
 package io.pivotal.conductor.worker.cloudfoundry;
 
 import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryProperties.CloudFoundryFoundationProperties;
+import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.cloudfoundry.client.CloudFoundryClient;
 import org.cloudfoundry.doppler.DopplerClient;
 import org.cloudfoundry.operations.CloudFoundryOperations;
@@ -17,109 +21,121 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Configuration("cloudFoundryConfig")
 public class CloudFoundryConfig {
-
-    public static final String DEFAULT_FOUNDATION_NAME = "default";
 
     @Autowired
     private CloudFoundryProperties properties;
 
     @Bean
+    public CloudFoundryClientsFactory cloudFoundryClientsFactory() {
+        return new CloudFoundryClientsFactory(cloudFoundryClientsMap());
+    }
+
+    @Bean
     public CloudFoundrySpaceClient cloudFoundrySpaceClient() {
-        return new CloudFoundrySpaceClient(defaultOrganizationCloudFoundryOperations(),
-            cloudFoundryClient());
+        return new CloudFoundrySpaceClient(cloudFoundryClientsFactory());
     }
 
     @Bean
     public CloudFoundryRouteClient cloudFoundryRouteClient() {
-        return new CloudFoundryRouteClient(properties, defaultOrganizationCloudFoundryOperations(),
-            cloudFoundryClient());
+        return new CloudFoundryRouteClient(cloudFoundryClientsFactory());
     }
 
     @Bean
-    public CloudFoundryServiceClient cloudFoundryServiceClient(
-        SpaceScopedCloudFoundryOperationsFactory spaceScopedCloudFoundryOperationsFactory) {
-        return new CloudFoundryServiceClient(spaceScopedCloudFoundryOperationsFactory);
+    public CloudFoundryServiceClient cloudFoundryServiceClient() {
+        return new CloudFoundryServiceClient(cloudFoundryClientsFactory()
+        );
     }
 
     @Bean
-    public ConnectionContext connectionContext() {
-        CloudFoundryFoundationProperties defaultFoundationProperties =
-            properties.getFoundations().get(DEFAULT_FOUNDATION_NAME);
-        return DefaultConnectionContext.builder()
-            .apiHost(defaultFoundationProperties.getApiHost())
-            .skipSslValidation(defaultFoundationProperties.getSkipSslValidation())
-            .build();
+    public Map<String, CloudFoundryClients> cloudFoundryClientsMap() {
+        return properties.getFoundations()
+            .entrySet()
+            .stream()
+            .map(entry -> {
+                CloudFoundryFoundationProperties foundationProperties = entry.getValue();
+                ConnectionContext connectionContext = DefaultConnectionContext.builder()
+                    .apiHost(foundationProperties.getApiHost())
+                    .skipSslValidation(foundationProperties.getSkipSslValidation())
+                    .build();
+
+                TokenProvider tokenProvider = PasswordGrantTokenProvider.builder()
+                    .password(foundationProperties.getPassword())
+                    .username(foundationProperties.getUsername())
+                    .build();
+
+                CloudFoundryClient cloudFoundryClient = ReactorCloudFoundryClient.builder()
+                    .connectionContext(connectionContext)
+                    .tokenProvider(tokenProvider)
+                    .build();
+
+                DopplerClient dopplerClient = ReactorDopplerClient.builder()
+                    .connectionContext(connectionContext)
+                    .tokenProvider(tokenProvider)
+                    .build();
+
+                UaaClient uaaClient = ReactorUaaClient.builder()
+                    .connectionContext(connectionContext)
+                    .tokenProvider(tokenProvider)
+                    .build();
+
+                DefaultCloudFoundryOperations.Builder cloudFoundryOperationsBuilder =
+                    DefaultCloudFoundryOperations.builder()
+                        .cloudFoundryClient(cloudFoundryClient)
+                        .dopplerClient(dopplerClient)
+                        .uaaClient(uaaClient);
+
+                CloudFoundryOperations cloudFoundryOperations =
+                    DefaultCloudFoundryOperations.builder()
+                        .cloudFoundryClient(cloudFoundryClient)
+                        .dopplerClient(dopplerClient)
+                        .uaaClient(uaaClient)
+                        .build();
+
+                CloudFoundryClients cloudFoundryClients = new CloudFoundryClients(connectionContext,
+                    tokenProvider, cloudFoundryClient,
+                    dopplerClient, uaaClient, cloudFoundryOperationsBuilder,
+                    cloudFoundryOperations);
+                return new AbstractMap.SimpleEntry<>(entry.getKey(),
+                    cloudFoundryClients);
+            })
+            .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue));
     }
 
-    @Bean
-    public TokenProvider tokenProvider() {
-        CloudFoundryFoundationProperties defaultFoundationProperties =
-            properties.getFoundations().get(DEFAULT_FOUNDATION_NAME);
-        return PasswordGrantTokenProvider.builder()
-            .password(defaultFoundationProperties.getPassword())
-            .username(defaultFoundationProperties.getUsername())
-            .build();
-    }
+    public static class CloudFoundryClientsFactory {
 
-    @Bean
-    public CloudFoundryClient cloudFoundryClient() {
-        return ReactorCloudFoundryClient.builder()
-            .connectionContext(connectionContext())
-            .tokenProvider(tokenProvider())
-            .build();
-    }
+        private final Map<String, CloudFoundryClients> cloudFoundryClientsMap;
 
-    @Bean
-    public DopplerClient dopplerClient() {
-        return ReactorDopplerClient.builder()
-            .connectionContext(connectionContext())
-            .tokenProvider(tokenProvider())
-            .build();
-    }
-
-    @Bean
-    public UaaClient uaaClient() {
-        return ReactorUaaClient.builder()
-            .connectionContext(connectionContext())
-            .tokenProvider(tokenProvider())
-            .build();
-    }
-
-    @Bean
-    public DefaultCloudFoundryOperations.Builder defaultOrganizationCloudFoundryOperationsBuilder() {
-        CloudFoundryFoundationProperties defaultFoundationProperties =
-            properties.getFoundations().get(DEFAULT_FOUNDATION_NAME);
-        return DefaultCloudFoundryOperations.builder()
-            .cloudFoundryClient(cloudFoundryClient())
-            .dopplerClient(dopplerClient())
-            .uaaClient(uaaClient())
-            .organization(defaultFoundationProperties.getOrganization());
-    }
-
-    @Bean
-    public CloudFoundryOperations defaultOrganizationCloudFoundryOperations() {
-        return defaultOrganizationCloudFoundryOperationsBuilder().build();
-    }
-
-    @Bean
-    public SpaceScopedCloudFoundryOperationsFactory spaceScopedCloudFoundryOperationsFactory() {
-        return new SpaceScopedCloudFoundryOperationsFactory(
-            defaultOrganizationCloudFoundryOperationsBuilder());
-    }
-
-    public static class SpaceScopedCloudFoundryOperationsFactory {
-
-        private final DefaultCloudFoundryOperations.Builder defaultCloudFoundryOperationsBuilder;
-
-        public SpaceScopedCloudFoundryOperationsFactory(
-            DefaultCloudFoundryOperations.Builder defaultCloudFoundryOperationsBuilder) {
-            this.defaultCloudFoundryOperationsBuilder = defaultCloudFoundryOperationsBuilder;
+        public CloudFoundryClientsFactory(
+            Map<String, CloudFoundryClients> cloudFoundryClientsMap) {
+            this.cloudFoundryClientsMap = cloudFoundryClientsMap;
         }
 
-        public CloudFoundryOperations makeCloudFoundryOperations(String spaceName) {
-            return defaultCloudFoundryOperationsBuilder
+        public CloudFoundryClient makeClient(String foundationName) {
+            return cloudFoundryClientsMap.get(foundationName)
+                .getCloudFoundryClient();
+        }
+
+        public CloudFoundryOperations makeRootOperations(String foundationName) {
+            return cloudFoundryClientsMap.get(foundationName)
+                .getCloudFoundryOperationsBuilder()
+                .build();
+        }
+
+        public CloudFoundryOperations makeOrganizationOperations(
+            String foundationName, String organizationName) {
+            return cloudFoundryClientsMap.get(foundationName)
+                .getCloudFoundryOperationsBuilder()
+                .organization(organizationName)
+                .build();
+        }
+
+        public CloudFoundryOperations makeOrganizationSpaceOperations(
+            String foundationName, String organizationName, String spaceName) {
+            return cloudFoundryClientsMap.get(foundationName)
+                .getCloudFoundryOperationsBuilder()
+                .organization(organizationName)
                 .space(spaceName)
                 .build();
         }

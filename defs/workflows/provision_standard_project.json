@@ -33,6 +33,7 @@
             "name": "create_cloud_foundry_space",
             "taskReferenceName": "create_review_cloud_foundry_space",
             "inputParameters": {
+              "foundationName": "${workflow.input.foundationName}",
               "projectName": "${workflow.input.projectName}",
               "spaceNameSuffix": "review",
               "dryRun": "${workflow.input.dryRun}"
@@ -46,6 +47,7 @@
             "name": "create_cloud_foundry_space",
             "taskReferenceName": "create_production_cloud_foundry_space",
             "inputParameters": {
+              "foundationName": "${workflow.input.foundationName}",
               "projectName": "${workflow.input.projectName}",
               "spaceNameSuffix": "production",
               "dryRun": "${workflow.input.dryRun}"

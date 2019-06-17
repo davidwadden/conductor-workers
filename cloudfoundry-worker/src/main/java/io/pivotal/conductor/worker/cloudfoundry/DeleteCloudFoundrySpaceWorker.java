@@ -9,9 +9,13 @@ public class DeleteCloudFoundrySpaceWorker implements Worker {
 
     static final String TASK_DEF_NAME = "delete_cloud_foundry_space";
 
+    private final CloudFoundryProperties properties;
     private final CloudFoundrySpaceClient cloudFoundrySpaceClient;
 
-    public DeleteCloudFoundrySpaceWorker(CloudFoundrySpaceClient cloudFoundrySpaceClient) {
+    public DeleteCloudFoundrySpaceWorker(
+        CloudFoundryProperties properties,
+        CloudFoundrySpaceClient cloudFoundrySpaceClient) {
+        this.properties = properties;
         this.cloudFoundrySpaceClient = cloudFoundrySpaceClient;
     }
 
@@ -22,6 +26,7 @@ public class DeleteCloudFoundrySpaceWorker implements Worker {
 
     @Override
     public TaskResult execute(Task task) {
+        String foundationName = (String) task.getInputData().get("foundationName");
         String projectName = (String) task.getInputData().get("projectName");
         String spaceNameSuffix = (String) task.getInputData().get("spaceNameSuffix");
         Boolean dryRun = Boolean.valueOf((String) task.getInputData().get("dryRun"));
@@ -29,7 +34,10 @@ public class DeleteCloudFoundrySpaceWorker implements Worker {
 
         Boolean wasDeleted = false;
         if (!dryRun) {
-            wasDeleted = cloudFoundrySpaceClient.deleteSpace(spaceName);
+            String organizationName = properties.getFoundations()
+                .get(foundationName)
+                .getOrganization();
+            wasDeleted = cloudFoundrySpaceClient.deleteSpace(foundationName, organizationName, spaceName);
         }
 
         TaskResult taskResult = new TaskResult(task);

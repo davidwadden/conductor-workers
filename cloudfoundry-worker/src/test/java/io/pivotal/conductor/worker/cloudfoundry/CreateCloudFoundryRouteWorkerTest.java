@@ -32,12 +32,15 @@ class CreateCloudFoundryRouteWorkerTest {
     @Test
     void execute() {
         CloudFoundryFoundationProperties foundationProperties = new CloudFoundryFoundationProperties();
+        foundationProperties.setOrganization("some-organization-name");
         foundationProperties.setDomain("some-domain");
-        properties.getFoundations().put("default", foundationProperties);
+        properties.getFoundations()
+            .put("some-foundation-name", foundationProperties);
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
         Map<String, Object> inputData = ImmutableMap.of(
+            "foundationName", "some-foundation-name",
             "projectName", "Some Project Name!",
             "hostnameSuffix", "-some-suffix",
             "spaceName", "some-space-name"
@@ -47,7 +50,8 @@ class CreateCloudFoundryRouteWorkerTest {
         TaskResult taskResult = worker.execute(task);
 
         verify(mockCloudFoundryRouteClient)
-            .createRoute("some-space-name", "some-project-name-some-suffix", "some-domain");
+            .createRoute("some-foundation-name", "some-organization-name", "some-space-name",
+                "some-project-name-some-suffix", "some-domain");
 
         assertThat(taskResult.getStatus()).isEqualTo(TaskResult.Status.COMPLETED);
         assertThat(taskResult.getOutputData())
@@ -56,15 +60,17 @@ class CreateCloudFoundryRouteWorkerTest {
 
     @Test
     void dryRun() {
-        CloudFoundryFoundationProperties defaultFoundationProperties =
+        CloudFoundryFoundationProperties foundationProperties =
             new CloudFoundryFoundationProperties();
-        defaultFoundationProperties.setDomain("some-domain");
+        foundationProperties.setOrganization("some-organization-name");
+        foundationProperties.setDomain("some-domain");
         properties.getFoundations()
-            .put(CloudFoundryConfig.DEFAULT_FOUNDATION_NAME, defaultFoundationProperties);
+            .put("some-foundation-name", foundationProperties);
 
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
         Map<String, Object> inputData = ImmutableMap.of(
+            "foundationName", "some-foundation-name",
             "projectName", "Some Project Name!",
             "hostnameSuffix", "-some-suffix",
             "spaceName", "some-space-name",

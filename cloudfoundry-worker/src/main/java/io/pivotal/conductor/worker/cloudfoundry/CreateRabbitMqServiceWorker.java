@@ -9,9 +9,13 @@ public class CreateRabbitMqServiceWorker implements Worker {
 
     static final String TASK_DEF_NAME = "create_rabbitmq";
 
+    private final CloudFoundryProperties properties;
     private final CloudFoundryServiceClient cloudFoundryServiceClient;
 
-    public CreateRabbitMqServiceWorker(CloudFoundryServiceClient cloudFoundryServiceClient) {
+    public CreateRabbitMqServiceWorker(
+        CloudFoundryProperties properties,
+        CloudFoundryServiceClient cloudFoundryServiceClient) {
+        this.properties = properties;
         this.cloudFoundryServiceClient = cloudFoundryServiceClient;
     }
 
@@ -22,6 +26,7 @@ public class CreateRabbitMqServiceWorker implements Worker {
 
     @Override
     public TaskResult execute(Task task) {
+        String foundationName = (String) task.getInputData().get("foundationName");
         String projectName = (String) task.getInputData().get("projectName");
         String spaceNameSuffix = (String) task.getInputData().get("spaceNameSuffix");
         String spaceName = (String) task.getInputData().get("spaceName");
@@ -29,7 +34,11 @@ public class CreateRabbitMqServiceWorker implements Worker {
         String serviceInstanceName = CloudFoundryUtil.deriveAmqpName(projectName, spaceNameSuffix);
 
         if (!dryRun) {
-            cloudFoundryServiceClient.createRabbitMqBroker(serviceInstanceName, spaceName);
+            String organizationName = properties.getFoundations()
+                .get(foundationName)
+                .getOrganization();
+            cloudFoundryServiceClient.createRabbitMqBroker(
+                foundationName, organizationName, spaceName, serviceInstanceName);
         }
 
         TaskResult taskResult = new TaskResult(task);

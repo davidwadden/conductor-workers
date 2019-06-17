@@ -20,7 +20,7 @@ public class CloudFoundryWorkerConfig {
     @Bean
     public CreateCloudFoundrySpaceWorker createCloudFoundrySpaceWorker(
         CloudFoundrySpaceClient cloudFoundrySpaceClient) {
-        return new CreateCloudFoundrySpaceWorker(cloudFoundrySpaceClient);
+        return new CreateCloudFoundrySpaceWorker(properties, cloudFoundrySpaceClient);
     }
 
     @Bean
@@ -33,19 +33,19 @@ public class CloudFoundryWorkerConfig {
     @Bean
     public CreateMysqlDatabaseServiceWorker createMysqlDatabaseServiceWorker(
         CloudFoundryServiceClient cloudFoundryServiceClient) {
-        return new CreateMysqlDatabaseServiceWorker(cloudFoundryServiceClient);
+        return new CreateMysqlDatabaseServiceWorker(properties, cloudFoundryServiceClient);
     }
 
     @Bean
     public CreateRabbitMqServiceWorker createRabbitMqServiceWorker(
         CloudFoundryServiceClient cloudFoundryServiceClient) {
-        return new CreateRabbitMqServiceWorker(cloudFoundryServiceClient);
+        return new CreateRabbitMqServiceWorker(properties, cloudFoundryServiceClient);
     }
 
     @Bean
     public DeleteCloudFoundrySpaceWorker deleteCloudFoundrySpaceWorker(
         CloudFoundrySpaceClient cloudFoundrySpaceClient) {
-        return new DeleteCloudFoundrySpaceWorker(cloudFoundrySpaceClient);
+        return new DeleteCloudFoundrySpaceWorker(properties, cloudFoundrySpaceClient);
     }
 
 }

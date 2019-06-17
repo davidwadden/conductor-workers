@@ -9,9 +9,13 @@ public class CreateMysqlDatabaseServiceWorker implements Worker {
 
     static final String TASK_DEF_NAME = "create_mysql_database";
 
+    private final CloudFoundryProperties properties;
     private final CloudFoundryServiceClient cloudFoundryServiceClient;
 
-    public CreateMysqlDatabaseServiceWorker(CloudFoundryServiceClient cloudFoundryServiceClient) {
+    public CreateMysqlDatabaseServiceWorker(
+        CloudFoundryProperties properties,
+        CloudFoundryServiceClient cloudFoundryServiceClient) {
+        this.properties = properties;
         this.cloudFoundryServiceClient = cloudFoundryServiceClient;
     }
 
@@ -22,6 +26,7 @@ public class CreateMysqlDatabaseServiceWorker implements Worker {
 
     @Override
     public TaskResult execute(Task task) {
+        String foundationName = (String) task.getInputData().get("foundationName");
         String projectName = (String) task.getInputData().get("projectName");
         String spaceNameSuffix = (String) task.getInputData().get("spaceNameSuffix");
         String spaceName = (String) task.getInputData().get("spaceName");
@@ -29,7 +34,10 @@ public class CreateMysqlDatabaseServiceWorker implements Worker {
         String databaseName = CloudFoundryUtil.deriveDatabaseName(projectName, spaceNameSuffix);
 
         if (!dryRun) {
-            cloudFoundryServiceClient.createMysqlDatabase(databaseName, spaceName);
+            String organizationName = properties.getFoundations()
+                .get(foundationName)
+                .getOrganization();
+            cloudFoundryServiceClient.createMysqlDatabase(foundationName, organizationName, spaceName, databaseName);
         }
 
         TaskResult taskResult = new TaskResult(task);

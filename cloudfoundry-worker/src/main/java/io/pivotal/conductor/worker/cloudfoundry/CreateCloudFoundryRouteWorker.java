@@ -27,6 +27,7 @@ public class CreateCloudFoundryRouteWorker implements Worker {
 
     @Override
     public TaskResult execute(Task task) {
+        String foundationName = (String) task.getInputData().get("foundationName");
         String projectName = (String) task.getInputData().get("projectName");
         String hostnameSuffix = (String) task.getInputData().get("hostnameSuffix");
         String spaceName = (String) task.getInputData().get("spaceName");
@@ -34,9 +35,12 @@ public class CreateCloudFoundryRouteWorker implements Worker {
         String hostname = CloudFoundryUtil.deriveRouteHostname(projectName, hostnameSuffix);
 
         if (!dryRun) {
-            CloudFoundryFoundationProperties defaultFoundationProperties =
-                properties.getFoundations().get(CloudFoundryConfig.DEFAULT_FOUNDATION_NAME);
-            cloudFoundryRouteClient.createRoute(spaceName, hostname, defaultFoundationProperties.getDomain());
+            CloudFoundryFoundationProperties foundationProperties = properties
+                .getFoundations()
+                .get(foundationName);
+            String organizationName = foundationProperties.getOrganization();
+            String domainName = foundationProperties.getDomain();
+            cloudFoundryRouteClient.createRoute(foundationName, organizationName, spaceName, hostname, domainName);
         }
 
         TaskResult taskResult = new TaskResult(task);

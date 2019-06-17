@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import com.google.common.collect.ImmutableMap;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
+import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryProperties.CloudFoundryFoundationProperties;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,20 +18,27 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class CreateMysqlDatabaseServiceWorkerTest {
 
+    private CloudFoundryProperties properties;
     @Mock
     private CloudFoundryServiceClient mockCloudFoundryServiceClient;
     private CreateMysqlDatabaseServiceWorker worker;
 
     @BeforeEach
     void setUp() {
-        worker = new CreateMysqlDatabaseServiceWorker(mockCloudFoundryServiceClient);
+        properties = new CloudFoundryProperties();
+        worker = new CreateMysqlDatabaseServiceWorker(properties, mockCloudFoundryServiceClient);
     }
 
     @Test
     void execute() {
+        CloudFoundryFoundationProperties foundationProperties = new CloudFoundryFoundationProperties();
+        foundationProperties.setOrganization("some-organization-name");
+        properties.getFoundations().put("some-foundation-name", foundationProperties);
+
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
         Map<String, Object> inputData = ImmutableMap.of(
+            "foundationName", "some-foundation-name",
             "projectName", "Some Project Name!",
             "spaceNameSuffix", "some-suffix",
             "spaceName", "some-space-name"
@@ -40,7 +48,7 @@ class CreateMysqlDatabaseServiceWorkerTest {
         TaskResult taskResult = worker.execute(task);
 
         verify(mockCloudFoundryServiceClient)
-            .createMysqlDatabase("some-project-name-database-some-suffix", "some-space-name");
+            .createMysqlDatabase("some-foundation-name", "some-organization-name", "some-space-name", "some-project-name-database-some-suffix");
 
         assertThat(taskResult.getStatus()).isEqualTo(TaskResult.Status.COMPLETED);
         assertThat(taskResult.getOutputData())
@@ -52,6 +60,7 @@ class CreateMysqlDatabaseServiceWorkerTest {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
         Map<String, Object> inputData = ImmutableMap.of(
+            "foundationName", "some-foundation-name",
             "projectName", "Some Project Name!",
             "spaceNameSuffix", "some-suffix",
             "spaceName", "some-space-name",
