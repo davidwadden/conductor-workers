@@ -5,15 +5,15 @@ import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.metadata.tasks.TaskResult.Status;
 
-public class DeleteCloudFoundrySpaceWorker implements Worker {
+public class CreateCloudFoundryOrganizationWorker implements Worker {
 
-    static final String TASK_DEF_NAME = "delete_cloud_foundry_space";
+    static final String TASK_DEF_NAME = "create_cloud_foundry_organization";
 
-    private final CloudFoundrySpaceClient cloudFoundrySpaceClient;
+    private final CloudFoundryOrganizationClient organizationClient;
 
-    public DeleteCloudFoundrySpaceWorker(
-        CloudFoundrySpaceClient cloudFoundrySpaceClient) {
-        this.cloudFoundrySpaceClient = cloudFoundrySpaceClient;
+    public CreateCloudFoundryOrganizationWorker(
+        CloudFoundryOrganizationClient organizationClient) {
+        this.organizationClient = organizationClient;
     }
 
     @Override
@@ -25,17 +25,14 @@ public class DeleteCloudFoundrySpaceWorker implements Worker {
     public TaskResult execute(Task task) {
         String foundationName = (String) task.getInputData().get("foundationName");
         String organizationName = (String) task.getInputData().get("organizationName");
-        String spaceName = (String) task.getInputData().get("spaceName");
         Boolean dryRun = Boolean.valueOf((String) task.getInputData().get("dryRun"));
 
-        Boolean wasDeleted = false;
         if (!dryRun) {
-            wasDeleted = cloudFoundrySpaceClient.deleteSpace(foundationName, organizationName, spaceName);
+            organizationClient.createOrganization(foundationName, organizationName);
         }
 
         TaskResult taskResult = new TaskResult(task);
         taskResult.setStatus(Status.COMPLETED);
-        taskResult.getOutputData().put("wasDeleted", wasDeleted);
 
         return taskResult;
     }

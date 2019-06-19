@@ -1,12 +1,11 @@
 [
   {
-    "name": "create_cloud_foundry_space",
+    "name": "create_cloud_foundry_organization",
     "retryCount": 2,
     "timeoutSeconds": 600,
     "inputKeys": [
       "foundationName",
       "organizationName",
-      "spaceName",
       "dryRun"
     ],
     "outputKeys": [

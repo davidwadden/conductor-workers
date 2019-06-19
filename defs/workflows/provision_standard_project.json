@@ -34,8 +34,8 @@
             "taskReferenceName": "create_review_cloud_foundry_space",
             "inputParameters": {
               "foundationName": "${workflow.input.foundationName}",
-              "projectName": "${workflow.input.projectName}",
-              "spaceNameSuffix": "review",
+              "organizationName": "${workflow.input.organizationName}",
+              "spaceName": "${derive_cloud_foundry_resource_name.output.resourceName}-review",
               "dryRun": "${workflow.input.dryRun}"
             },
             "type": "SIMPLE",
@@ -48,8 +48,8 @@
             "taskReferenceName": "create_production_cloud_foundry_space",
             "inputParameters": {
               "foundationName": "${workflow.input.foundationName}",
-              "projectName": "${workflow.input.projectName}",
-              "spaceNameSuffix": "production",
+              "organizationName": "${workflow.input.organizationName}",
+              "spaceName": "${derive_cloud_foundry_resource_name.output.resourceName}-production",
               "dryRun": "${workflow.input.dryRun}"
             },
             "type": "SIMPLE",

@@ -1,24 +1,12 @@
 {
-  "name": "deprovision_standard_project",
-  "description": "Deprovisions a standard project",
+  "name": "deprovision_cloud_foundry_foundation",
+  "description": "Delete an Org with Spaces in Cloud Foundry",
   "version": 1,
   "tasks": [
-    {
-      "name": "delete_jira_project",
-      "taskReferenceName": "delete_jira_project",
-      "inputParameters": {
-        "projectName": "${workflow.input.projectName}",
-        "dryRun": "true"
-      },
-      "type": "SIMPLE",
-      "startDelay": 0,
-      "optional": true
-    },
     {
       "name": "derive_cloud_foundry_resource_name",
       "taskReferenceName": "derive_cloud_foundry_resource_name",
       "inputParameters": {
-        "foundationName": "${workflow.input.foundationName}",
         "projectName": "${workflow.input.projectName}",
         "dryRun": "${workflow.input.dryRun}"
       },
@@ -36,8 +24,8 @@
             "taskReferenceName": "delete_review_cloud_foundry_space",
             "inputParameters": {
               "foundationName": "${workflow.input.foundationName}",
-              "organizationName": "${workflow.input.organizationName}",
-              "spaceName": "${derive_cloud_foundry_resource_name.output.resourceName}-review",
+              "organizationName": "${derive_cloud_foundry_resource_name.output.resourceName}",
+              "spaceName": "review",
               "dryRun": "${workflow.input.dryRun}"
             },
             "type": "SIMPLE",
@@ -51,8 +39,8 @@
             "taskReferenceName": "delete_production_cloud_foundry_space",
             "inputParameters": {
               "foundationName": "${workflow.input.foundationName}",
-              "organizationName": "${workflow.input.organizationName}",
-              "spaceName": "${derive_cloud_foundry_resource_name.output.resourceName}-production",
+              "organizationName": "${derive_cloud_foundry_resource_name.output.resourceName}",
+              "spaceName": "production",
               "dryRun": "${workflow.input.dryRun}"
             },
             "type": "SIMPLE",
@@ -72,22 +60,19 @@
       ]
     },
     {
-      "name": "delete_concourse_pipeline",
-      "taskReferenceName": "delete_concourse_pipeline",
+      "name": "delete_cloud_foundry_organization",
+      "taskReferenceName": "delete_cloud_foundry_organization",
       "inputParameters": {
-        "projectName": "${workflow.input.projectName}",
+        "foundationName": "${workflow.input.foundationName}",
+        "organizationName": "${derive_cloud_foundry_resource_name.output.resourceName}",
         "dryRun": "${workflow.input.dryRun}"
       },
       "type": "SIMPLE",
-      "startDelay": 0,
-      "optional": true
+      "startDelay": 0
     }
   ],
   "outputParameters": {
-    "jiraProjectDeleted": "${delete_jira_project.output.wasDeleted}",
-    "reviewCloudFoundrySpaceDeleted": "${delete_review_cloud_foundry_space.output.wasDeleted}",
-    "productionCloudFoundrySpaceDeleted": "${delete_production_cloud_foundry_space.output.wasDeleted}",
-    "concoursePipelineDeleted": "${delete_concourse_pipeline.output.wasDeleted}"
+    "cloudFoundryOrganizationUrl": "${delete_cloud_foundry_organization.output.organizationUrl}"
   },
   "schemaVersion": 2
 }

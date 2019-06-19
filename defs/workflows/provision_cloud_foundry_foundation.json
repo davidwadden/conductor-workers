@@ -1,0 +1,78 @@
+{
+  "name": "provision_cloud_foundry_foundation",
+  "description": "Create an Org with Spaces in Cloud Foundry",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "derive_cloud_foundry_resource_name",
+      "taskReferenceName": "derive_cloud_foundry_resource_name",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "dryRun": "${workflow.input.dryRun}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    },
+    {
+      "name": "create_cloud_foundry_organization",
+      "taskReferenceName": "create_cloud_foundry_organization",
+      "inputParameters": {
+        "foundationName": "${workflow.input.foundationName}",
+        "organizationName": "${derive_cloud_foundry_resource_name.output.resourceName}",
+        "dryRun": "${workflow.input.dryRun}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    },
+    {
+      "name": "fork_join_cloudfoundry_spaces",
+      "taskReferenceName": "fork_join_cloudfoundry_spaces",
+      "type": "FORK_JOIN",
+      "forkTasks": [
+        [
+          {
+            "name": "create_cloud_foundry_space",
+            "taskReferenceName": "create_review_cloud_foundry_space",
+            "inputParameters": {
+              "foundationName": "${workflow.input.foundationName}",
+              "organizationName": "${derive_cloud_foundry_resource_name.output.resourceName}",
+              "spaceName": "review",
+              "dryRun": "${workflow.input.dryRun}"
+            },
+            "type": "SIMPLE",
+            "startDelay": 0,
+            "optional": true
+          }
+        ],
+        [
+          {
+            "name": "create_cloud_foundry_space",
+            "taskReferenceName": "create_production_cloud_foundry_space",
+            "inputParameters": {
+              "foundationName": "${workflow.input.foundationName}",
+              "organizationName": "${derive_cloud_foundry_resource_name.output.resourceName}",
+              "spaceName": "production",
+              "dryRun": "${workflow.input.dryRun}"
+            },
+            "type": "SIMPLE",
+            "startDelay": 0,
+            "optional": true
+          }
+        ]
+      ]
+    },
+    {
+      "name": "join_cloudfoundry_spaces",
+      "taskReferenceName": "join_cloudfoundry_spaces",
+      "type": "JOIN",
+      "joinOn": [
+        "create_review_cloud_foundry_space",
+        "create_production_cloud_foundry_space"
+      ]
+    }
+  ],
+  "outputParameters": {
+    "cloudFoundryOrganizationUrl": "${create_cloud_foundry_organization.output.organizationUrl}"
+  },
+  "schemaVersion": 2
+}

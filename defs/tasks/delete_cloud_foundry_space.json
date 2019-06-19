@@ -4,8 +4,9 @@
     "retryCount": 2,
     "timeoutSeconds": 600,
     "inputKeys": [
-      "projectName",
-      "spaceNameSuffix",
+      "foundationName",
+      "organizationName",
+      "spaceName",
       "dryRun"
     ],
     "outputKeys": [

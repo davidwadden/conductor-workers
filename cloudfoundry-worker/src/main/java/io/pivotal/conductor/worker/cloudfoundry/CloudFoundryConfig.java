@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration("cloudFoundryConfig")
+@Configuration
 public class CloudFoundryConfig {
 
     @Autowired
@@ -30,6 +30,11 @@ public class CloudFoundryConfig {
     @Bean
     public CloudFoundryClientsFactory cloudFoundryClientsFactory() {
         return new CloudFoundryClientsFactory(cloudFoundryClientsMap());
+    }
+
+    @Bean
+    public CloudFoundryOrganizationClient cloudFoundryOrganizationClient() {
+        return new CloudFoundryOrganizationClient(cloudFoundryClientsFactory());
     }
 
     @Bean

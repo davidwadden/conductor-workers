@@ -53,8 +53,8 @@ portal:
         api-host: api.dev.cfdev.sh
         apps-manager-host: apps.dev.cfdev.sh
         organization: cfdev-org
-        username: user
-        password: pass
+        username: admin
+        password: admin
         domain: dev.cfdev.sh
         skip-ssl-validation: true
 logging:
