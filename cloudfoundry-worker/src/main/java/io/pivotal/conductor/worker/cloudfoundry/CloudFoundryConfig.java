@@ -44,8 +44,12 @@ public class CloudFoundryConfig {
 
     @Bean
     public CloudFoundryServiceClient cloudFoundryServiceClient() {
-        return new CloudFoundryServiceClient(cloudFoundryClientsFactory()
-        );
+        return new CloudFoundryServiceClient(cloudFoundryClientsFactory());
+    }
+
+    @Bean
+    public CloudFoundryUserClient cloudFoundryUserClient() {
+        return new CloudFoundryUserClient(cloudFoundryClientsFactory());
     }
 
     @Bean

@@ -4,6 +4,18 @@
   "version": 1,
   "tasks": [
     {
+      "name": "create_cloud_foundry_user",
+      "taskReferenceName": "create_cloud_foundry_user",
+      "inputParameters": {
+        "foundationName": "${workflow.input.foundationName}",
+        "username": "${workflow.input.username}",
+        "password": "${workflow.input.password}",
+        "dryRun": "${workflow.input.dryRun}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    },
+    {
       "name": "create_cloud_foundry_organization",
       "taskReferenceName": "create_cloud_foundry_organization",
       "inputParameters": {

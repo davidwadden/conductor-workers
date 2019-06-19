@@ -36,6 +36,12 @@ public class CloudFoundryWorkerConfig {
     }
 
     @Bean
+    public CreateCloudFoundryUserWorker createCloudFoundryUserWorker(
+        CloudFoundryUserClient cloudFoundryUserClient) {
+        return new CreateCloudFoundryUserWorker(cloudFoundryUserClient);
+    }
+
+    @Bean
     public DeleteCloudFoundryOrganizationWorker deleteCloudFoundryOrganizationWorker(
         CloudFoundryOrganizationClient cloudFoundryOrganizationClient) {
         return new DeleteCloudFoundryOrganizationWorker(cloudFoundryOrganizationClient);
@@ -51,6 +57,12 @@ public class CloudFoundryWorkerConfig {
     public DeleteCloudFoundryServiceInstanceWorker deleteCloudFoundryServiceInstanceWorker(
         CloudFoundryServiceClient cloudFoundryServiceInstanceClient) {
         return new DeleteCloudFoundryServiceInstanceWorker(cloudFoundryServiceInstanceClient);
+    }
+
+    @Bean
+    public DeleteCloudFoundryUserWorker deleteCloudFoundryUserWorker(
+        CloudFoundryUserClient cloudFoundryUserClient) {
+        return new DeleteCloudFoundryUserWorker(cloudFoundryUserClient);
     }
 
 }

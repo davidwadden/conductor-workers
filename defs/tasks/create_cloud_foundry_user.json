@@ -1,0 +1,19 @@
+[
+  {
+    "name": "create_cloud_foundry_user",
+    "retryCount": 2,
+    "timeoutSeconds": 600,
+    "inputKeys": [
+      "foundationName",
+      "username",
+      "password",
+      "dryRun"
+    ],
+    "outputKeys": [
+    ],
+    "timeoutPolicy": "TIME_OUT_WF",
+    "retryLogic": "FIXED",
+    "retryDelaySeconds": 5,
+    "responseTimeoutSeconds": 60
+  }
+]
