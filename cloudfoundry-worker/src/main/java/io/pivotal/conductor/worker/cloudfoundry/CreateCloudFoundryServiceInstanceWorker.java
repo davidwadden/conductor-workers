@@ -5,17 +5,14 @@ import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.metadata.tasks.TaskResult.Status;
 
-public class CreateMysqlDatabaseServiceWorker implements Worker {
+public class CreateCloudFoundryServiceInstanceWorker implements Worker {
 
-    static final String TASK_DEF_NAME = "create_mysql_database";
+    static final String TASK_DEF_NAME = "create_cloud_foundry_service_instance";
 
-    private final CloudFoundryProperties properties;
     private final CloudFoundryServiceClient cloudFoundryServiceClient;
 
-    public CreateMysqlDatabaseServiceWorker(
-        CloudFoundryProperties properties,
+    public CreateCloudFoundryServiceInstanceWorker(
         CloudFoundryServiceClient cloudFoundryServiceClient) {
-        this.properties = properties;
         this.cloudFoundryServiceClient = cloudFoundryServiceClient;
     }
 
@@ -27,22 +24,21 @@ public class CreateMysqlDatabaseServiceWorker implements Worker {
     @Override
     public TaskResult execute(Task task) {
         String foundationName = (String) task.getInputData().get("foundationName");
-        String projectName = (String) task.getInputData().get("projectName");
-        String spaceNameSuffix = (String) task.getInputData().get("spaceNameSuffix");
+        String organizationName = (String) task.getInputData().get("organizationName");
         String spaceName = (String) task.getInputData().get("spaceName");
+        String serviceName = (String) task.getInputData().get("serviceName");
+        String servicePlanName = (String) task.getInputData().get("servicePlanName");
+        String serviceInstanceName = (String) task.getInputData().get("serviceInstanceName");
         Boolean dryRun = Boolean.valueOf((String) task.getInputData().get("dryRun"));
-        String databaseName = CloudFoundryUtil.deriveDatabaseName(projectName, spaceNameSuffix);
 
         if (!dryRun) {
-            String organizationName = properties.getFoundations()
-                .get(foundationName)
-                .getOrganization();
-            cloudFoundryServiceClient.createMysqlDatabase(foundationName, organizationName, spaceName, databaseName);
+            cloudFoundryServiceClient
+                .createServiceInstance(foundationName, organizationName, spaceName, serviceName,
+                    servicePlanName, serviceInstanceName);
         }
 
         TaskResult taskResult = new TaskResult(task);
         taskResult.setStatus(Status.COMPLETED);
-        taskResult.getOutputData().put("databaseName", databaseName);
 
         return taskResult;
     }

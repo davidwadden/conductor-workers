@@ -3,6 +3,7 @@ package io.pivotal.conductor.worker.cloudfoundry;
 import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryConfig.CloudFoundryClientsFactory;
 import org.cloudfoundry.operations.CloudFoundryOperations;
 import org.cloudfoundry.operations.services.CreateServiceInstanceRequest;
+import org.cloudfoundry.operations.services.DeleteServiceInstanceRequest;
 
 public class CloudFoundryServiceClient {
 
@@ -12,16 +13,16 @@ public class CloudFoundryServiceClient {
         this.cloudFoundryClientsFactory = cloudFoundryClientsFactory;
     }
 
-    public void createMysqlDatabase(String foundationName, String organizationName,
-        String spaceName, String serviceInstanceName) {
+    public void createServiceInstance(String foundationName, String organizationName,
+        String spaceName, String serviceName, String servicePlanName, String serviceInstanceName) {
 
         CloudFoundryOperations cloudFoundryOperations = cloudFoundryClientsFactory
             .makeOrganizationSpaceOperations(foundationName, organizationName, spaceName);
 
         CreateServiceInstanceRequest request = CreateServiceInstanceRequest.builder()
             .serviceInstanceName(serviceInstanceName)
-            .serviceName("p-mysql")
-            .planName("100mb")
+            .serviceName(serviceName)
+            .planName(servicePlanName)
             .build();
 
         cloudFoundryOperations.services()
@@ -29,21 +30,18 @@ public class CloudFoundryServiceClient {
             .block();
     }
 
-    public void createRabbitMqBroker(String foundationName, String organizationName,
+    public void deleteServiceInstance(String foundationName, String organizationName,
         String spaceName, String serviceInstanceName) {
 
         CloudFoundryOperations cloudFoundryOperations = cloudFoundryClientsFactory
             .makeOrganizationSpaceOperations(foundationName, organizationName, spaceName);
 
-        CreateServiceInstanceRequest request = CreateServiceInstanceRequest.builder()
-            .serviceInstanceName(serviceInstanceName)
-            .serviceName("cloudamqp")
-            .planName("lemur")
+        DeleteServiceInstanceRequest request = DeleteServiceInstanceRequest.builder()
+            .name(serviceInstanceName)
             .build();
 
         cloudFoundryOperations.services()
-            .createInstance(request)
+            .deleteInstance(request)
             .block();
     }
-
 }

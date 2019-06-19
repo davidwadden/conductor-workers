@@ -5,17 +5,14 @@ import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.metadata.tasks.TaskResult.Status;
 
-public class CreateRabbitMqServiceWorker implements Worker {
+public class DeleteCloudFoundryServiceInstanceWorker implements Worker {
 
-    static final String TASK_DEF_NAME = "create_rabbitmq";
+    static final String TASK_DEF_NAME = "delete_cloud_foundry_service_instance";
 
-    private final CloudFoundryProperties properties;
     private final CloudFoundryServiceClient cloudFoundryServiceClient;
 
-    public CreateRabbitMqServiceWorker(
-        CloudFoundryProperties properties,
+    public DeleteCloudFoundryServiceInstanceWorker(
         CloudFoundryServiceClient cloudFoundryServiceClient) {
-        this.properties = properties;
         this.cloudFoundryServiceClient = cloudFoundryServiceClient;
     }
 
@@ -27,23 +24,19 @@ public class CreateRabbitMqServiceWorker implements Worker {
     @Override
     public TaskResult execute(Task task) {
         String foundationName = (String) task.getInputData().get("foundationName");
-        String projectName = (String) task.getInputData().get("projectName");
-        String spaceNameSuffix = (String) task.getInputData().get("spaceNameSuffix");
+        String organizationName = (String) task.getInputData().get("organizationName");
         String spaceName = (String) task.getInputData().get("spaceName");
+        String serviceInstanceName = (String) task.getInputData().get("serviceInstanceName");
         Boolean dryRun = Boolean.valueOf((String) task.getInputData().get("dryRun"));
-        String serviceInstanceName = CloudFoundryUtil.deriveAmqpName(projectName, spaceNameSuffix);
 
         if (!dryRun) {
-            String organizationName = properties.getFoundations()
-                .get(foundationName)
-                .getOrganization();
-            cloudFoundryServiceClient.createRabbitMqBroker(
-                foundationName, organizationName, spaceName, serviceInstanceName);
+            cloudFoundryServiceClient
+                .deleteServiceInstance(foundationName, organizationName, spaceName,
+                    serviceInstanceName);
         }
 
         TaskResult taskResult = new TaskResult(task);
         taskResult.setStatus(Status.COMPLETED);
-        taskResult.getOutputData().put("serviceInstanceName", serviceInstanceName);
 
         return taskResult;
     }

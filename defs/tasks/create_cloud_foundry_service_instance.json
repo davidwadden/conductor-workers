@@ -1,16 +1,18 @@
 [
   {
-    "name": "create_rabbitmq",
+    "name": "create_cloud_foundry_service_instance",
     "retryCount": 2,
     "timeoutSeconds": 600,
     "inputKeys": [
-      "projectName",
-      "spaceNameSuffix",
+      "foundationName",
+      "organizationName",
       "spaceName",
+      "serviceName",
+      "servicePlanName",
+      "serviceInstanceName",
       "dryRun"
     ],
     "outputKeys": [
-      "serviceInstanceName"
     ],
     "timeoutPolicy": "TIME_OUT_WF",
     "retryLogic": "FIXED",

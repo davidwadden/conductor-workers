@@ -37,15 +37,9 @@ public class CloudFoundryWorkerConfig {
     }
 
     @Bean
-    public CreateMysqlDatabaseServiceWorker createMysqlDatabaseServiceWorker(
-        CloudFoundryServiceClient cloudFoundryServiceClient) {
-        return new CreateMysqlDatabaseServiceWorker(properties, cloudFoundryServiceClient);
-    }
-
-    @Bean
-    public CreateRabbitMqServiceWorker createRabbitMqServiceWorker(
-        CloudFoundryServiceClient cloudFoundryServiceClient) {
-        return new CreateRabbitMqServiceWorker(properties, cloudFoundryServiceClient);
+    public CreateCloudFoundryServiceInstanceWorker createCloudFoundryServiceInstanceWorker(
+        CloudFoundryServiceClient cloudFoundryServiceInstanceClient) {
+        return new CreateCloudFoundryServiceInstanceWorker(cloudFoundryServiceInstanceClient);
     }
 
     @Bean
@@ -58,6 +52,12 @@ public class CloudFoundryWorkerConfig {
     public DeleteCloudFoundrySpaceWorker deleteCloudFoundrySpaceWorker(
         CloudFoundrySpaceClient cloudFoundrySpaceClient) {
         return new DeleteCloudFoundrySpaceWorker(cloudFoundrySpaceClient);
+    }
+
+    @Bean
+    public DeleteCloudFoundryServiceInstanceWorker deleteCloudFoundryServiceInstanceWorker(
+        CloudFoundryServiceClient cloudFoundryServiceInstanceClient) {
+        return new DeleteCloudFoundryServiceInstanceWorker(cloudFoundryServiceInstanceClient);
     }
 
 }

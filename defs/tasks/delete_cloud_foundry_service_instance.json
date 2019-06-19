@@ -1,16 +1,16 @@
 [
   {
-    "name": "create_mysql_database",
+    "name": "delete_cloud_foundry_service_instance",
     "retryCount": 2,
     "timeoutSeconds": 600,
     "inputKeys": [
-      "projectName",
-      "spaceNameSuffix",
+      "foundationName",
+      "organizationName",
       "spaceName",
+      "serviceInstanceName",
       "dryRun"
     ],
     "outputKeys": [
-      "databaseName"
     ],
     "timeoutPolicy": "TIME_OUT_WF",
     "retryLogic": "FIXED",
