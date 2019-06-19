@@ -54,10 +54,8 @@ public class CloudFoundryProperties {
 
         private String apiHost;
         private String appsManagerHost;
-        private String organization;
         private String username;
         private String password;
-        private String domain;
         private Boolean skipSslValidation;
 
         public String getApiHost() {
@@ -76,14 +74,6 @@ public class CloudFoundryProperties {
             this.appsManagerHost = appsManagerHost;
         }
 
-        public String getOrganization() {
-            return organization;
-        }
-
-        public void setOrganization(String organization) {
-            this.organization = organization;
-        }
-
         public String getUsername() {
             return username;
         }
@@ -98,14 +88,6 @@ public class CloudFoundryProperties {
 
         public void setPassword(String password) {
             this.password = password;
-        }
-
-        public String getDomain() {
-            return domain;
-        }
-
-        public void setDomain(String domain) {
-            this.domain = domain;
         }
 
         public Boolean getSkipSslValidation() {
@@ -131,10 +113,8 @@ public class CloudFoundryProperties {
             return new EqualsBuilder()
                 .append(apiHost, that.apiHost)
                 .append(appsManagerHost, that.appsManagerHost)
-                .append(organization, that.organization)
                 .append(username, that.username)
                 .append(password, that.password)
-                .append(domain, that.domain)
                 .append(skipSslValidation, that.skipSslValidation)
                 .isEquals();
         }
@@ -144,10 +124,8 @@ public class CloudFoundryProperties {
             return new HashCodeBuilder(17, 37)
                 .append(apiHost)
                 .append(appsManagerHost)
-                .append(organization)
                 .append(username)
                 .append(password)
-                .append(domain)
                 .append(skipSslValidation)
                 .toHashCode();
         }
@@ -157,10 +135,8 @@ public class CloudFoundryProperties {
             return new ToStringBuilder(this)
                 .append("apiHost", apiHost)
                 .append("appsManagerHost", appsManagerHost)
-                .append("organization", organization)
                 .append("username", username)
                 .append("password", password)
-                .append("domain", domain)
                 .append("skipSslValidation", skipSslValidation)
                 .toString();
         }
