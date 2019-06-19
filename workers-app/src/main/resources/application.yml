@@ -57,6 +57,22 @@ portal:
         password: admin
         domain: dev.cfdev.sh
         skip-ssl-validation: true
+      east:
+        api-host: api.dev.cfdev.sh
+        apps-manager-host: apps.dev.cfdev.sh
+        organization: cfdev-org
+        username: admin
+        password: admin
+        domain: dev.cfdev.sh
+        skip-ssl-validation: true
+      west:
+        api-host: api.dev.cfdev.sh
+        apps-manager-host: apps.dev.cfdev.sh
+        organization: cfdev-org
+        username: admin
+        password: admin
+        domain: dev.cfdev.sh
+        skip-ssl-validation: true
 logging:
   level:
     cloudfoundry-client: debug

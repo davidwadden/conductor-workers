@@ -1,0 +1,68 @@
+{
+  "name": "provision_multi_foundation_cloud_foundry",
+  "description": "Provisions Cloud Foundry Orgs and Spaces across Foundations",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "derive_cloud_foundry_resource_name",
+      "taskReferenceName": "derive_cloud_foundry_resource_name",
+      "inputParameters": {
+        "projectName": "${workflow.input.projectName}",
+        "dryRun": "${workflow.input.dryRun}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    },
+    {
+      "name": "fork_join_cloud_foundry_foundations",
+      "taskReferenceName": "fork_join_cloud_foundry_foundations",
+      "type": "FORK_JOIN",
+      "forkTasks": [
+        [
+          {
+            "name": "provision_cloud_foundry_foundation_subflow",
+            "taskReferenceName": "provision_east_cloud_foundry_foundation_subflow",
+            "inputParameters": {
+              "foundationName": "east",
+              "organizationName": "east-${derive_cloud_foundry_resource_name.output.resourceName}",
+              "dryRun": "${workflow.input.dryRun}"
+            },
+            "type": "SUB_WORKFLOW",
+            "subWorkflowParam": {
+              "name": "provision_cloud_foundry_foundation",
+              "version": 1
+            }
+          }
+        ],
+        [
+          {
+            "name": "provision_cloud_foundry_foundation_subflow",
+            "taskReferenceName": "provision_west_cloud_foundry_foundation_subflow",
+            "inputParameters": {
+              "foundationName": "west",
+              "organizationName": "west-${derive_cloud_foundry_resource_name.output.resourceName}",
+              "dryRun": "${workflow.input.dryRun}"
+            },
+            "type": "SUB_WORKFLOW",
+            "subWorkflowParam": {
+              "name": "provision_cloud_foundry_foundation",
+              "version": 1
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "name": "join_provision_cloud_foundry_foundation_subflows",
+      "taskReferenceName": "join_provision_cloud_foundry_foundation_subflows",
+      "type": "JOIN",
+      "joinOn": [
+        "provision_east_cloud_foundry_foundation_subflow",
+        "provision_west_cloud_foundry_foundation_subflow"
+      ]
+    }
+  ],
+  "outputParameters": {
+  },
+  "schemaVersion": 2
+}

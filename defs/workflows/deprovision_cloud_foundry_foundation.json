@@ -4,16 +4,6 @@
   "version": 1,
   "tasks": [
     {
-      "name": "derive_cloud_foundry_resource_name",
-      "taskReferenceName": "derive_cloud_foundry_resource_name",
-      "inputParameters": {
-        "projectName": "${workflow.input.projectName}",
-        "dryRun": "${workflow.input.dryRun}"
-      },
-      "type": "SIMPLE",
-      "startDelay": 0
-    },
-    {
       "name": "fork_join_cloudfoundry_spaces",
       "taskReferenceName": "fork_join_cloudfoundry_spaces",
       "type": "FORK_JOIN",
@@ -24,7 +14,7 @@
             "taskReferenceName": "delete_review_cloud_foundry_space",
             "inputParameters": {
               "foundationName": "${workflow.input.foundationName}",
-              "organizationName": "${derive_cloud_foundry_resource_name.output.resourceName}",
+              "organizationName": "${workflow.input.organizationName}",
               "spaceName": "review",
               "dryRun": "${workflow.input.dryRun}"
             },
@@ -39,7 +29,7 @@
             "taskReferenceName": "delete_production_cloud_foundry_space",
             "inputParameters": {
               "foundationName": "${workflow.input.foundationName}",
-              "organizationName": "${derive_cloud_foundry_resource_name.output.resourceName}",
+              "organizationName": "${workflow.input.organizationName}",
               "spaceName": "production",
               "dryRun": "${workflow.input.dryRun}"
             },
@@ -64,11 +54,12 @@
       "taskReferenceName": "delete_cloud_foundry_organization",
       "inputParameters": {
         "foundationName": "${workflow.input.foundationName}",
-        "organizationName": "${derive_cloud_foundry_resource_name.output.resourceName}",
+        "organizationName": "${workflow.input.organizationName}",
         "dryRun": "${workflow.input.dryRun}"
       },
       "type": "SIMPLE",
-      "startDelay": 0
+      "startDelay": 0,
+      "optional": true
     }
   ],
   "outputParameters": {

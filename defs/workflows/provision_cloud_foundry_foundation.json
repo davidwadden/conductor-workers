@@ -4,21 +4,11 @@
   "version": 1,
   "tasks": [
     {
-      "name": "derive_cloud_foundry_resource_name",
-      "taskReferenceName": "derive_cloud_foundry_resource_name",
-      "inputParameters": {
-        "projectName": "${workflow.input.projectName}",
-        "dryRun": "${workflow.input.dryRun}"
-      },
-      "type": "SIMPLE",
-      "startDelay": 0
-    },
-    {
       "name": "create_cloud_foundry_organization",
       "taskReferenceName": "create_cloud_foundry_organization",
       "inputParameters": {
         "foundationName": "${workflow.input.foundationName}",
-        "organizationName": "${derive_cloud_foundry_resource_name.output.resourceName}",
+        "organizationName": "${workflow.input.organizationName}",
         "dryRun": "${workflow.input.dryRun}"
       },
       "type": "SIMPLE",
@@ -35,7 +25,7 @@
             "taskReferenceName": "create_review_cloud_foundry_space",
             "inputParameters": {
               "foundationName": "${workflow.input.foundationName}",
-              "organizationName": "${derive_cloud_foundry_resource_name.output.resourceName}",
+              "organizationName": "${workflow.input.organizationName}",
               "spaceName": "review",
               "dryRun": "${workflow.input.dryRun}"
             },
@@ -50,7 +40,7 @@
             "taskReferenceName": "create_production_cloud_foundry_space",
             "inputParameters": {
               "foundationName": "${workflow.input.foundationName}",
-              "organizationName": "${derive_cloud_foundry_resource_name.output.resourceName}",
+              "organizationName": "${workflow.input.organizationName}",
               "spaceName": "production",
               "dryRun": "${workflow.input.dryRun}"
             },
