@@ -13,7 +13,10 @@ subprojects { subproject ->
     version = '0.1.0-SNAPSHOT'
     sourceCompatibility = '1.8'
 
-    repositories { jcenter() }
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
 
     dependencies {
         testImplementation('org.junit.jupiter:junit-jupiter-api')

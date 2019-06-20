@@ -5,6 +5,7 @@ import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.cloudfoundry.client.CloudFoundryClient;
 import org.cloudfoundry.doppler.DopplerClient;
 import org.cloudfoundry.operations.CloudFoundryOperations;
@@ -14,6 +15,7 @@ import org.cloudfoundry.reactor.DefaultConnectionContext;
 import org.cloudfoundry.reactor.TokenProvider;
 import org.cloudfoundry.reactor.client.ReactorCloudFoundryClient;
 import org.cloudfoundry.reactor.doppler.ReactorDopplerClient;
+import org.cloudfoundry.reactor.tokenprovider.ClientCredentialsGrantTokenProvider;
 import org.cloudfoundry.reactor.tokenprovider.PasswordGrantTokenProvider;
 import org.cloudfoundry.reactor.uaa.ReactorUaaClient;
 import org.cloudfoundry.uaa.UaaClient;
@@ -64,10 +66,22 @@ public class CloudFoundryConfig {
                     .skipSslValidation(foundationProperties.getSkipSslValidation())
                     .build();
 
-                TokenProvider tokenProvider = PasswordGrantTokenProvider.builder()
-                    .password(foundationProperties.getPassword())
-                    .username(foundationProperties.getUsername())
-                    .build();
+                TokenProvider tokenProvider;
+                if (StringUtils.isNotEmpty(foundationProperties.getClientId()) &&
+                    StringUtils.isNotEmpty(foundationProperties.getClientSecret())) {
+                    tokenProvider = ClientCredentialsGrantTokenProvider.builder()
+                        .clientId(foundationProperties.getClientId())
+                        .clientSecret(foundationProperties.getClientSecret())
+                        .build();
+                } else if (StringUtils.isNotEmpty(foundationProperties.getUsername()) &&
+                    StringUtils.isNotEmpty(foundationProperties.getPassword())) {
+                    tokenProvider = PasswordGrantTokenProvider.builder()
+                        .password(foundationProperties.getPassword())
+                        .username(foundationProperties.getUsername())
+                        .build();
+                } else {
+                    throw new IllegalArgumentException("Unknown OAuth configuration");
+                }
 
                 CloudFoundryClient cloudFoundryClient = ReactorCloudFoundryClient.builder()
                     .connectionContext(connectionContext)

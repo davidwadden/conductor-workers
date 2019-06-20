@@ -8,7 +8,16 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class CloudFoundryProperties {
 
+    private Boolean enabled;
     private Map<String, CloudFoundryFoundationProperties> foundations = new LinkedHashMap<>();
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
 
     public Map<String, CloudFoundryFoundationProperties> getFoundations() {
         return foundations;
@@ -32,6 +41,7 @@ public class CloudFoundryProperties {
         CloudFoundryProperties that = (CloudFoundryProperties) o;
 
         return new EqualsBuilder()
+            .append(enabled, that.enabled)
             .append(foundations, that.foundations)
             .isEquals();
     }
@@ -39,6 +49,7 @@ public class CloudFoundryProperties {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+            .append(enabled)
             .append(foundations)
             .toHashCode();
     }
@@ -46,6 +57,7 @@ public class CloudFoundryProperties {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+            .append("enabled", enabled)
             .append("foundations", foundations)
             .toString();
     }
@@ -56,6 +68,8 @@ public class CloudFoundryProperties {
         private String appsManagerHost;
         private String username;
         private String password;
+        private String clientId;
+        private String clientSecret;
         private Boolean skipSslValidation;
 
         public String getApiHost() {
@@ -90,6 +104,22 @@ public class CloudFoundryProperties {
             this.password = password;
         }
 
+        public String getClientId() {
+            return clientId;
+        }
+
+        public void setClientId(String clientId) {
+            this.clientId = clientId;
+        }
+
+        public String getClientSecret() {
+            return clientSecret;
+        }
+
+        public void setClientSecret(String clientSecret) {
+            this.clientSecret = clientSecret;
+        }
+
         public Boolean getSkipSslValidation() {
             return skipSslValidation;
         }
@@ -115,6 +145,8 @@ public class CloudFoundryProperties {
                 .append(appsManagerHost, that.appsManagerHost)
                 .append(username, that.username)
                 .append(password, that.password)
+                .append(clientId, that.clientId)
+                .append(clientSecret, that.clientSecret)
                 .append(skipSslValidation, that.skipSslValidation)
                 .isEquals();
         }
@@ -126,6 +158,8 @@ public class CloudFoundryProperties {
                 .append(appsManagerHost)
                 .append(username)
                 .append(password)
+                .append(clientId)
+                .append(clientSecret)
                 .append(skipSslValidation)
                 .toHashCode();
         }
@@ -137,6 +171,8 @@ public class CloudFoundryProperties {
                 .append("appsManagerHost", appsManagerHost)
                 .append("username", username)
                 .append("password", password)
+                .append("clientId", clientId)
+                .append("clientSecret", clientSecret)
                 .append("skipSslValidation", skipSslValidation)
                 .toString();
         }

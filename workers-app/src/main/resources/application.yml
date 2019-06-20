@@ -15,8 +15,13 @@ portal:
       default:
         api-host: api.run.pivotal.io
         apps-manager-host: console.run.pivotal.io
+        ## password grant flow
         username: some-cloudfoundry-username
         password: some-cloudfoundry-password
+        ## client credentials flow
+        client-id: some-cloudfoundry-username
+        client-secret: some-cloudfoundry-client-secret
+        ## end flows
         skip-ssl-validation: false
   concourse:
     api-host: https://ci.some-domain
@@ -50,24 +55,25 @@ portal:
       default:
         api-host: api.dev.cfdev.sh
         apps-manager-host: apps.dev.cfdev.sh
-        username: admin
-        password: admin
+        client-id: some-client-id
+        client-secret: some-client-secret
         skip-ssl-validation: true
       east:
         api-host: api.dev.cfdev.sh
         apps-manager-host: apps.dev.cfdev.sh
-        username: admin
-        password: admin
+        client-id: some-client-id
+        client-secret: some-client-secret
         skip-ssl-validation: true
       west:
         api-host: api.dev.cfdev.sh
         apps-manager-host: apps.dev.cfdev.sh
-        username: admin
-        password: admin
+        client-id: some-client-id
+        client-secret: some-client-secret
         skip-ssl-validation: true
+
 logging:
   level:
-    cloudfoundry-client: debug
+    cloudfoundry-client: trace
 
 ---
 spring:
