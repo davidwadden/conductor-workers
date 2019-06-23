@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import com.google.common.collect.ImmutableMap;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
+import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,17 +31,20 @@ class CreateCloudFoundryUserWorkerTest {
     void execute() {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = ImmutableMap.of(
-            "foundationName", "some-foundation-name",
-            "username", "some-username",
-            "password", "some-password"
-        );
+        Map<String, Object> inputData = new HashMap<String, Object>() {{
+            put("foundationName", "some-foundation-name");
+            put("userName", "some-user-name");
+            put("password", "some-password");
+            put("origin", "some-origin");
+            put("externalId", "some-external-id");
+        }};
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
 
         verify(mockCloudFoundryUserClient)
-            .createUser("some-foundation-name", "some-username", "some-password");
+            .createUser("some-foundation-name", "some-user-name", "some-password",
+                "some-origin", "some-external-id");
 
         assertThat(taskResult.getStatus()).isEqualTo(TaskResult.Status.COMPLETED);
     }
@@ -49,12 +53,15 @@ class CreateCloudFoundryUserWorkerTest {
     void dryRun() {
         Task task = new Task();
         task.setStatus(Task.Status.SCHEDULED);
-        Map<String, Object> inputData = ImmutableMap.of(
-            "foundationName", "some-foundation-name",
-            "username", "some-username",
-            "password", "some-password",
-            "dryRun", "true"
-        );
+
+        Map<String, Object> inputData = new HashMap<String, Object>() {{
+            put("foundationName", "some-foundation-name");
+            put("userName", "some-user-name");
+            put("password", "some-password");
+            put("origin", "some-origin");
+            put("externalId", "some-external-id");
+            put("dryRun", "true");
+        }};
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);

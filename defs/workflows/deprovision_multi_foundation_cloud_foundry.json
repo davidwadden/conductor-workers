@@ -25,7 +25,8 @@
             "inputParameters": {
               "foundationName": "east",
               "organizationName": "east-${derive_cloud_foundry_resource_name.output.resourceName}",
-              "username": "east-${derive_cloud_foundry_resource_name.output.resourceName}",
+              "userName": "east-${derive_cloud_foundry_resource_name.output.resourceName}",
+              "password": "password",
               "dryRun": "${workflow.input.dryRun}"
             },
             "type": "SUB_WORKFLOW",
@@ -42,7 +43,8 @@
             "inputParameters": {
               "foundationName": "west",
               "organizationName": "west-${derive_cloud_foundry_resource_name.output.resourceName}",
-              "username": "east-${derive_cloud_foundry_resource_name.output.resourceName}",
+              "userName": "east-${derive_cloud_foundry_resource_name.output.resourceName}",
+              "password": "password",
               "dryRun": "${workflow.input.dryRun}"
             },
             "type": "SUB_WORKFLOW",

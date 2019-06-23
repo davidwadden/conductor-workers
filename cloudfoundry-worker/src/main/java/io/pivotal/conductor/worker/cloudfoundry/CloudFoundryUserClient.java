@@ -1,9 +1,13 @@
 package io.pivotal.conductor.worker.cloudfoundry;
 
 import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryConfig.CloudFoundryClientsFactory;
-import org.cloudfoundry.operations.CloudFoundryOperations;
-import org.cloudfoundry.operations.useradmin.CreateUserRequest;
-import org.cloudfoundry.operations.useradmin.DeleteUserRequest;
+import org.cloudfoundry.uaa.UaaClient;
+import org.cloudfoundry.uaa.users.CreateUserRequest;
+import org.cloudfoundry.uaa.users.DeleteUserRequest;
+import org.cloudfoundry.uaa.users.Email;
+import org.cloudfoundry.uaa.users.LookupUserIdsRequest;
+import org.cloudfoundry.uaa.users.LookupUserIdsResponse;
+import org.cloudfoundry.uaa.users.Name;
 
 public class CloudFoundryUserClient {
 
@@ -14,32 +18,52 @@ public class CloudFoundryUserClient {
         this.cloudFoundryClientsFactory = cloudFoundryClientsFactory;
     }
 
-    public void createUser(String foundationName, String username, String password) {
-        CloudFoundryOperations cloudFoundryOperations =
-            cloudFoundryClientsFactory.makeRootOperations(foundationName);
+    public void createUser(String foundationName, String userName, String password,
+        String origin, String externalId) {
+        UaaClient uaaClient = cloudFoundryClientsFactory.makeUaaClient(foundationName);
 
         CreateUserRequest request = CreateUserRequest.builder()
-            .username(username)
+            .email(Email.builder()
+                .primary(true)
+                .value(userName)
+                .build())
+            .name(Name.builder()
+                .familyName(userName)
+                .givenName(userName)
+                .build())
+            .origin(origin)
             .password(password)
+            .userName(userName)
+            .externalId(externalId)
             .build();
 
-        cloudFoundryOperations
-            .userAdmin()
+        uaaClient.users()
             .create(request)
             .block();
     }
 
-    public void deleteUser(String foundationName, String username) {
-        CloudFoundryOperations cloudFoundryOperations =
-            cloudFoundryClientsFactory.makeRootOperations(foundationName);
+    public void deleteUser(String foundationName, String userName) {
+        UaaClient uaaClient = cloudFoundryClientsFactory.makeUaaClient(foundationName);
 
-        DeleteUserRequest request = DeleteUserRequest.builder()
-            .username(username)
+        LookupUserIdsRequest lookupRequest = LookupUserIdsRequest.builder()
+            .filter("userName+eq+\"" + userName + "\"")
             .build();
 
-        cloudFoundryOperations
-            .userAdmin()
-            .delete(request)
+        LookupUserIdsResponse lookupResponse = uaaClient.users()
+            .lookup(lookupRequest)
+            .block();
+        if (lookupResponse.getTotalResults() != 1) {
+            throw new IllegalArgumentException(
+                String.format("Expected to find 1 user result from lookup, found %d",
+                    lookupResponse.getTotalResults()));
+        }
+
+        DeleteUserRequest deleteRequest = DeleteUserRequest.builder()
+            .userId(lookupResponse.getResources().get(0).getId())
+            .build();
+
+        uaaClient.users()
+            .delete(deleteRequest)
             .block();
     }
 

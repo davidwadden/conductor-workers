@@ -5,8 +5,10 @@
     "timeoutSeconds": 600,
     "inputKeys": [
       "foundationName",
-      "username",
+      "userName",
       "password",
+      "origin",
+      "externalId",
       "dryRun"
     ],
     "outputKeys": [

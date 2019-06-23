@@ -131,31 +131,59 @@ public class CloudFoundryConfig {
         }
 
         public CloudFoundryClient makeClient(String foundationName) {
-            return cloudFoundryClientsMap.get(foundationName)
-                .getCloudFoundryClient();
+            CloudFoundryClients foundationClients = cloudFoundryClientsMap.get(foundationName);
+            if (foundationClients == null) {
+                throw new IllegalArgumentException("Invalid foundationName");
+            }
+
+            return foundationClients.getCloudFoundryClient();
         }
 
         public CloudFoundryOperations makeRootOperations(String foundationName) {
-            return cloudFoundryClientsMap.get(foundationName)
-                .getCloudFoundryOperationsBuilder()
-                .build();
+            CloudFoundryClients foundationClients = cloudFoundryClientsMap.get(foundationName);
+            if (foundationClients == null) {
+                throw new IllegalArgumentException("Invalid foundationName");
+            }
+
+            return foundationClients.getCloudFoundryOperations();
         }
 
         public CloudFoundryOperations makeOrganizationOperations(
             String foundationName, String organizationName) {
-            return cloudFoundryClientsMap.get(foundationName)
-                .getCloudFoundryOperationsBuilder()
+
+            CloudFoundryClients foundationClients = cloudFoundryClientsMap.get(foundationName);
+            if (foundationClients == null) {
+                throw new IllegalArgumentException("Invalid foundationName");
+            }
+
+            return DefaultCloudFoundryOperations.builder()
+                .from((DefaultCloudFoundryOperations) foundationClients.getCloudFoundryOperations())
                 .organization(organizationName)
                 .build();
         }
 
         public CloudFoundryOperations makeOrganizationSpaceOperations(
             String foundationName, String organizationName, String spaceName) {
-            return cloudFoundryClientsMap.get(foundationName)
-                .getCloudFoundryOperationsBuilder()
+
+            CloudFoundryClients foundationClients = cloudFoundryClientsMap.get(foundationName);
+            if (foundationClients == null) {
+                throw new IllegalArgumentException("Invalid foundationName");
+            }
+
+            return DefaultCloudFoundryOperations.builder()
+                .from((DefaultCloudFoundryOperations) foundationClients.getCloudFoundryOperations())
                 .organization(organizationName)
                 .space(spaceName)
                 .build();
+        }
+
+        public UaaClient makeUaaClient(String foundationName) {
+            CloudFoundryClients foundationClients = cloudFoundryClientsMap.get(foundationName);
+            if (foundationClients == null) {
+                throw new IllegalArgumentException("Invalid foundationName");
+            }
+
+            return foundationClients.getUaaClient();
         }
     }
 

@@ -24,11 +24,11 @@ public class DeleteCloudFoundryUserWorker implements Worker {
     @Override
     public TaskResult execute(Task task) {
         String foundationName = (String) task.getInputData().get("foundationName");
-        String username = (String) task.getInputData().get("username");
+        String userName = (String) task.getInputData().get("userName");
         Boolean dryRun = Boolean.valueOf((String) task.getInputData().get("dryRun"));
 
         if (!dryRun) {
-            cloudFoundryUserClient.deleteUser(foundationName, username);
+            cloudFoundryUserClient.deleteUser(foundationName, userName);
         }
 
         TaskResult taskResult = new TaskResult(task);

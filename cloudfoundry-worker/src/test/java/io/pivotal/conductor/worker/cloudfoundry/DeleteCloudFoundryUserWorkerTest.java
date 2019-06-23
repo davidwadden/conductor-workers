@@ -32,14 +32,14 @@ class DeleteCloudFoundryUserWorkerTest {
         task.setStatus(Task.Status.SCHEDULED);
         Map<String, Object> inputData = ImmutableMap.of(
             "foundationName", "some-foundation-name",
-            "username", "some-username"
+            "userName", "some-user-name"
         );
         task.setInputData(inputData);
 
         TaskResult taskResult = worker.execute(task);
 
         verify(mockCloudFoundryUserClient)
-            .deleteUser("some-foundation-name", "some-username");
+            .deleteUser("some-foundation-name", "some-user-name");
 
         assertThat(taskResult.getStatus()).isEqualTo(TaskResult.Status.COMPLETED);
     }
@@ -50,7 +50,7 @@ class DeleteCloudFoundryUserWorkerTest {
         task.setStatus(Task.Status.SCHEDULED);
         Map<String, Object> inputData = ImmutableMap.of(
             "foundationName", "some-foundation-name",
-            "username", "some-username",
+            "userName", "some-user-name",
             "dryRun", "true"
         );
         task.setInputData(inputData);

@@ -24,12 +24,15 @@ public class CreateCloudFoundryUserWorker implements Worker {
     @Override
     public TaskResult execute(Task task) {
         String foundationName = (String) task.getInputData().get("foundationName");
-        String username = (String) task.getInputData().get("username");
+        String userName = (String) task.getInputData().get("userName");
         String password = (String) task.getInputData().get("password");
+        String origin = (String) task.getInputData().get("origin");
+        String externalId = (String) task.getInputData().get("externalId");
         Boolean dryRun = Boolean.valueOf((String) task.getInputData().get("dryRun"));
 
         if (!dryRun) {
-            cloudFoundryUserClient.createUser(foundationName, username, password);
+            cloudFoundryUserClient
+                .createUser(foundationName, userName, password, origin, externalId);
         }
 
         TaskResult taskResult = new TaskResult(task);
