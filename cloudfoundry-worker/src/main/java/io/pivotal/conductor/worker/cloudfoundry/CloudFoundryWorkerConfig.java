@@ -65,4 +65,10 @@ public class CloudFoundryWorkerConfig {
         return new DeleteCloudFoundryUserWorker(cloudFoundryUserClient);
     }
 
+    @Bean
+    public ListCloudFoundryUsersWorker listCloudFoundryUsersWorker(
+        CloudFoundryUserClient cloudFoundryUserClient) {
+        return new ListCloudFoundryUsersWorker(cloudFoundryUserClient);
+    }
+
 }

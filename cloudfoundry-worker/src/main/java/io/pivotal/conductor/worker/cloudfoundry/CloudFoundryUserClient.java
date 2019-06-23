@@ -1,6 +1,8 @@
 package io.pivotal.conductor.worker.cloudfoundry;
 
 import io.pivotal.conductor.worker.cloudfoundry.CloudFoundryConfig.CloudFoundryClientsFactory;
+import java.util.Collection;
+import java.util.Set;
 import org.cloudfoundry.uaa.UaaClient;
 import org.cloudfoundry.uaa.users.CreateUserRequest;
 import org.cloudfoundry.uaa.users.DeleteUserRequest;
@@ -8,6 +10,7 @@ import org.cloudfoundry.uaa.users.Email;
 import org.cloudfoundry.uaa.users.LookupUserIdsRequest;
 import org.cloudfoundry.uaa.users.LookupUserIdsResponse;
 import org.cloudfoundry.uaa.users.Name;
+import org.cloudfoundry.uaa.users.UserId;
 
 public class CloudFoundryUserClient {
 
@@ -43,20 +46,14 @@ public class CloudFoundryUserClient {
     }
 
     public void deleteUser(String foundationName, String userName) {
-        UaaClient uaaClient = cloudFoundryClientsFactory.makeUaaClient(foundationName);
-
-        LookupUserIdsRequest lookupRequest = LookupUserIdsRequest.builder()
-            .filter("userName+eq+\"" + userName + "\"")
-            .build();
-
-        LookupUserIdsResponse lookupResponse = uaaClient.users()
-            .lookup(lookupRequest)
-            .block();
+        LookupUserIdsResponse lookupResponse = lookupUserIds(foundationName, userName);
         if (lookupResponse.getTotalResults() != 1) {
             throw new IllegalArgumentException(
                 String.format("Expected to find 1 user result from lookup, found %d",
                     lookupResponse.getTotalResults()));
         }
+
+        UaaClient uaaClient = cloudFoundryClientsFactory.makeUaaClient(foundationName);
 
         DeleteUserRequest deleteRequest = DeleteUserRequest.builder()
             .userId(lookupResponse.getResources().get(0).getId())
@@ -67,5 +64,21 @@ public class CloudFoundryUserClient {
             .block();
     }
 
+    public Collection<UserId> listUsers(String foundationName, String userName) {
+        LookupUserIdsResponse lookupResponse = lookupUserIds(foundationName, userName);
+        return lookupResponse.getResources();
+    }
+
+    private LookupUserIdsResponse lookupUserIds(String foundationName, String userName) {
+        UaaClient uaaClient = cloudFoundryClientsFactory.makeUaaClient(foundationName);
+
+        LookupUserIdsRequest lookupRequest = LookupUserIdsRequest.builder()
+            .filter("userName+eq+\"" + userName + "\"")
+            .build();
+
+        return uaaClient.users()
+            .lookup(lookupRequest)
+            .block();
+    }
 
 }
