@@ -15,16 +15,30 @@
       "startDelay": 0
     },
     {
-      "name": "create_cloud_foundry_user",
-      "taskReferenceName": "create_cloud_foundry_user",
+      "name": "decide_create_cloud_foundry_user",
+      "taskReferenceName": "decide_create_cloud_foundry_user",
       "inputParameters": {
-        "foundationName": "${workflow.input.foundationName}",
-        "userName": "${workflow.input.userName}",
-        "password": "${workflow.input.password}",
-        "dryRun": "${workflow.input.dryRun}"
+        "userCount": "${list_cloud_foundry_users.output.userCount}"
       },
-      "type": "SIMPLE",
-      "startDelay": 0
+      "type": "DECISION",
+      "caseValueParam": "userCount",
+      "defaultCase": [],
+      "decisionCases": {
+        "0": [
+          {
+            "name": "create_cloud_foundry_user",
+            "taskReferenceName": "create_cloud_foundry_user",
+            "inputParameters": {
+              "foundationName": "${workflow.input.foundationName}",
+              "userName": "${workflow.input.userName}",
+              "password": "${workflow.input.password}",
+              "dryRun": "${workflow.input.dryRun}"
+            },
+            "type": "SIMPLE",
+            "startDelay": 0
+          }
+        ]
+      }
     },
     {
       "name": "create_cloud_foundry_organization",

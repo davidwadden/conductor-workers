@@ -62,16 +62,41 @@
       "optional": true
     },
     {
-      "name": "delete_cloud_foundry_user",
-      "taskReferenceName": "delete_cloud_foundry_user",
+      "name": "list_cloud_foundry_users",
+      "taskReferenceName": "list_cloud_foundry_users",
       "inputParameters": {
         "foundationName": "${workflow.input.foundationName}",
         "userName": "${workflow.input.userName}",
         "dryRun": "${workflow.input.dryRun}"
       },
       "type": "SIMPLE",
-      "startDelay": 0,
-      "optional": true
+      "startDelay": 0
+    },
+    {
+      "name": "decide_delete_cloud_foundry_user",
+      "taskReferenceName": "decide_delete_cloud_foundry_user",
+      "inputParameters": {
+        "userCount": "${list_cloud_foundry_users.output.userCount}"
+      },
+      "type": "DECISION",
+      "caseValueParam": "userCount",
+      "defaultCase": [],
+      "decisionCases": {
+        "1": [
+          {
+            "name": "delete_cloud_foundry_user",
+            "taskReferenceName": "delete_cloud_foundry_user",
+            "inputParameters": {
+              "foundationName": "${workflow.input.foundationName}",
+              "userName": "${workflow.input.userName}",
+              "dryRun": "${workflow.input.dryRun}"
+            },
+            "type": "SIMPLE",
+            "startDelay": 0,
+            "optional": true
+          }
+        ]
+      }
     }
   ],
   "outputParameters": {
