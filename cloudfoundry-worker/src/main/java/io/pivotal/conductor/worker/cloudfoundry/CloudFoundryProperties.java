@@ -1,5 +1,6 @@
 package io.pivotal.conductor.worker.cloudfoundry;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -70,6 +71,7 @@ public class CloudFoundryProperties {
         private String password;
         private String clientId;
         private String clientSecret;
+        private Collection<String> scope;
         private Boolean skipSslValidation;
 
         public String getApiHost() {
@@ -120,6 +122,14 @@ public class CloudFoundryProperties {
             this.clientSecret = clientSecret;
         }
 
+        public Collection<String> getScope() {
+            return scope;
+        }
+
+        public void setScope(Collection<String> scope) {
+            this.scope = scope;
+        }
+
         public Boolean getSkipSslValidation() {
             return skipSslValidation;
         }
@@ -147,6 +157,7 @@ public class CloudFoundryProperties {
                 .append(password, that.password)
                 .append(clientId, that.clientId)
                 .append(clientSecret, that.clientSecret)
+                .append(scope, that.scope)
                 .append(skipSslValidation, that.skipSslValidation)
                 .isEquals();
         }
@@ -160,6 +171,7 @@ public class CloudFoundryProperties {
                 .append(password)
                 .append(clientId)
                 .append(clientSecret)
+                .append(scope)
                 .append(skipSslValidation)
                 .toHashCode();
         }
@@ -173,6 +185,7 @@ public class CloudFoundryProperties {
                 .append("password", password)
                 .append("clientId", clientId)
                 .append("clientSecret", clientSecret)
+                .append("scope", scope)
                 .append("skipSslValidation", skipSslValidation)
                 .toString();
         }

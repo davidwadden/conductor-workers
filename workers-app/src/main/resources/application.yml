@@ -21,6 +21,12 @@ portal:
         ## client credentials flow
         client-id: some-cloudfoundry-username
         client-secret: some-cloudfoundry-client-secret
+        scope:
+          - cloud_controller.admin
+          - uaa.admin
+          - scim.read
+          - scim.write
+          - scim.userids
         ## end flows
         skip-ssl-validation: false
   concourse:
@@ -57,18 +63,36 @@ portal:
         apps-manager-host: apps.dev.cfdev.sh
         client-id: some-client-id
         client-secret: some-client-secret
+        scope:
+          - cloud_controller.admin
+          - uaa.admin
+          - scim.read
+          - scim.write
+          - scim.userids
         skip-ssl-validation: true
       east:
         api-host: api.dev.cfdev.sh
         apps-manager-host: apps.dev.cfdev.sh
         client-id: some-client-id
         client-secret: some-client-secret
+        scope:
+          - cloud_controller.admin
+          - uaa.admin
+          - scim.read
+          - scim.write
+          - scim.userids
         skip-ssl-validation: true
       west:
         api-host: api.dev.cfdev.sh
         apps-manager-host: apps.dev.cfdev.sh
         client-id: some-client-id
         client-secret: some-client-secret
+        scope:
+          - cloud_controller.admin
+          - uaa.admin
+          - scim.read
+          - scim.write
+          - scim.userids
         skip-ssl-validation: true
 
 logging:

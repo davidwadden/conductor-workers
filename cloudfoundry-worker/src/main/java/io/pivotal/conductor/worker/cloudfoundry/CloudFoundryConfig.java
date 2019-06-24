@@ -72,6 +72,7 @@ public class CloudFoundryConfig {
                     tokenProvider = ClientCredentialsGrantTokenProvider.builder()
                         .clientId(foundationProperties.getClientId())
                         .clientSecret(foundationProperties.getClientSecret())
+                        .scope(foundationProperties.getScope())
                         .build();
                 } else if (StringUtils.isNotEmpty(foundationProperties.getUsername()) &&
                     StringUtils.isNotEmpty(foundationProperties.getPassword())) {
