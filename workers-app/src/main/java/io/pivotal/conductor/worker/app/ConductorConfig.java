@@ -1,5 +1,6 @@
 package io.pivotal.conductor.worker.app;
 
+import com.netflix.conductor.client.http.MetadataClient;
 import com.netflix.conductor.client.http.TaskClient;
 import com.netflix.conductor.client.task.WorkflowTaskCoordinator;
 import com.netflix.conductor.client.task.WorkflowTaskCoordinator.Builder;
@@ -87,6 +88,13 @@ public class ConductorConfig {
     @ConfigurationProperties("portal.tracker")
     public TrackerProperties  trackerProperties() {
         return new TrackerProperties();
+    }
+
+    @Bean
+    public MetadataClient metadataClient() {
+        MetadataClient metadataClient = new MetadataClient();
+        metadataClient.setRootURI(properties.getConductorRootUri());
+        return metadataClient;
     }
 
     @Bean
