@@ -103,7 +103,6 @@ public class ConductorConfig {
             .withTaskClient(taskClient())
             .withWorkers(workers)
             .build();
-        taskCoordinator.init();
         return taskCoordinator;
     }
 
