@@ -102,6 +102,7 @@ public class ConductorConfig {
         WorkflowTaskCoordinator taskCoordinator = new Builder()
             .withTaskClient(taskClient())
             .withWorkers(workers)
+            .withThreadCount(Math.round(workers.size() * properties.getThreadsPerWorker()))
             .build();
         return taskCoordinator;
     }

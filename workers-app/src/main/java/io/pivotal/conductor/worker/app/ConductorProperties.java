@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ConductorProperties {
 
     private String conductorRootUri;
+    private Float threadsPerWorker;
 
     public String getConductorRootUri() {
         return conductorRootUri;
@@ -16,6 +17,14 @@ public class ConductorProperties {
 
     public void setConductorRootUri(String conductorRootUri) {
         this.conductorRootUri = conductorRootUri;
+    }
+
+    public Float getThreadsPerWorker() {
+        return threadsPerWorker;
+    }
+
+    public void setThreadsPerWorker(Float threadsPerWorker) {
+        this.threadsPerWorker = threadsPerWorker;
     }
 
     @Override
@@ -32,6 +41,7 @@ public class ConductorProperties {
 
         return new EqualsBuilder()
             .append(conductorRootUri, that.conductorRootUri)
+            .append(threadsPerWorker, that.threadsPerWorker)
             .isEquals();
     }
 
@@ -39,6 +49,7 @@ public class ConductorProperties {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
             .append(conductorRootUri)
+            .append(threadsPerWorker)
             .toHashCode();
     }
 
@@ -46,6 +57,7 @@ public class ConductorProperties {
     public String toString() {
         return new ToStringBuilder(this)
             .append("conductorRootUri", conductorRootUri)
+            .append("threadsPerWorker", threadsPerWorker)
             .toString();
     }
 }

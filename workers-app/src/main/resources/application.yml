@@ -6,6 +6,7 @@ server:
 portal:
   conductor:
     conductor-root-uri: http://localhost:8080/api/
+    threads-per-worker: 1
   bitbucket:
     username: some-bitbucket-username
     password: some-bitbucket-password
