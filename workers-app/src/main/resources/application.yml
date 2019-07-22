@@ -52,6 +52,12 @@ portal:
     api-key: some-tracker-api-key
     account-id: -1
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, conductor
+
 ---
 spring:
   profiles: cfdev
